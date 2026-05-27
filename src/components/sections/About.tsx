@@ -1,28 +1,23 @@
 "use client";
 
-import { FeatureHeading } from "@/components/ui/FeatureHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const mainFeatures = [
   {
-    line1: "ДОПОМОГА ПРИ",
-    line2: "ВІДМОВІ ВІД КУРІННЯ",
+    title: "Допомога при відмові від куріння",
     text: "Пристрій відмінно імітує звичний ритуал «рука-рот», допомагаючи подолати психологічну залежність без шкоди для здоров'я, диму та нікотину.",
   },
   {
-    line1: "АРОМАТЕРАПІЯ",
-    line2: "ТА СМАКИ",
+    title: "Ароматерапія та кастомізація смаку",
     text: "Інгалятор легко налаштовується під ваші уподобання. Використовуйте улюблені ефірні олії або ароматичні картриджі, щоб створити індивідуальний мікс для розслаблення, концентрації чи тонусу.",
   },
   {
-    line1: "ДИХАЛЬНА",
-    line2: "МЕДИТАЦІЯ",
+    title: "Дихальна медитація",
     text: "Спеціально розроблена конструкція оптимізує опір повітря під час вдиху, допомагаючи практикувати глибоке, розмірене дихання для зняття тривожності та стресу.",
   },
   {
-    line1: "ПРЕМІАЛЬНИЙ",
-    line2: "ДИЗАЙН",
+    title: "Преміальний дизайн",
     text: "Елегантний дерев'яний корпус приємно тримати в руках, а компактний розмір дозволяє носити стік із собою всюди.",
   },
 ];
@@ -37,7 +32,7 @@ export function About() {
           <SectionHeading line1="ПРО" line2="ПРОДУКТ" />
         </Reveal>
 
-        <div className="mt-8 max-w-3xl space-y-10 sm:mt-10 sm:space-y-14">
+        <div className="mt-8 max-w-3xl space-y-8 sm:mt-10 sm:space-y-12">
           <Reveal delay={0.1}>
             <p className="max-w-2xl text-sm leading-relaxed text-muted sm:text-base md:text-lg">
               Я — це стильний та екологічний девайс, створений для тих, хто прагне
@@ -48,28 +43,23 @@ export function About() {
 
           <div className="h-px w-full bg-border" />
 
-          <div>
-            <Reveal delay={0.15}>
-              <FeatureHeading
-                variant="label"
-                line1="ОСНОВНІ ПЕРЕВАГИ"
-                line2="ТА ФУНКЦІЇ"
-              />
-            </Reveal>
-
-            <ul className="mt-4 space-y-4 sm:mt-6 sm:space-y-6">
-              {mainFeatures.map((feature, i) => (
-                <li key={feature.line1}>
-                  <Reveal delay={0.2 + i * 0.08}>
-                    <FeatureHeading variant="feature" line1={feature.line1} line2={feature.line2} />
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted sm:mt-2 sm:text-base">
-                      {feature.text}
+          <Reveal delay={0.15}>
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-muted">
+                Основні переваги та функції
+              </h4>
+              <ul className="mt-4 space-y-4 sm:mt-6 sm:space-y-6">
+                {mainFeatures.map((feature) => (
+                  <li key={feature.title} className="space-y-1.5 sm:space-y-2">
+                    <p className="font-display text-base font-bold sm:text-lg md:text-xl">
+                      {feature.title}
                     </p>
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
-          </div>
+                    <p className="text-sm leading-relaxed text-muted sm:text-base">{feature.text}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
