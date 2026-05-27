@@ -74,13 +74,85 @@ export function ContactForm() {
   );
 
   const applyWarehouseSelection = useCallback((warehouse: WarehouseOption) => {
-    setWarehouseQuery(warehouse.name);
+    const numberMatch = warehouse.name.match(/№\s*(\d+)/);
+    setWarehouseQuery(numberMatch?.[1] ?? warehouse.name);
     setSelectedWarehouseRef(warehouse.ref);
     setSelectedWarehouseName(warehouse.name);
     setWarehouseLocked(true);
     setShowWarehouseList(false);
     setNpError("");
   }, []);
+
+  const loadWarehouseOptions = useCallback(
+    async (searchQuery: string) => {
+      if (!hasApiKey || !selectedCityRef) return;
+
+      setLoadingWarehouses(true);
+      setNpError("");
+
+      try {
+        const data =
+          searchQuery.length < 1
+            ? await fetchWarehousesForCity(
+                NOVA_POSHTA_API_KEY,
+                selectedCityRef,
+                deliveryMethod,
+                50,
+              )
+            : await searchWarehouses(
+                NOVA_POSHTA_API_KEY,
+                selectedCityRef,
+                deliveryMethod,
+                searchQuery,
+              );
+
+        const mapped: WarehouseOption[] = data.slice(0, 50).map((item) => ({
+          ref: item.Ref,
+          name: formatWarehouseLabel(item),
+        }));
+
+        setWarehouses(mapped);
+        setShowWarehouseList(true);
+
+        if (mapped.length === 0 && searchQuery.length > 0) {
+          setNpError(
+            `${activeDelivery.pointLabel} не знайдено. Спробуйте інший номер або адресу.`,
+          );
+        }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : undefined;
+        setNpError(
+          message ??
+            (searchQuery.length < 1
+              ? `Не вдалося завантажити ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`
+              : `Не вдалося знайти ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`),
+        );
+        setWarehouses([]);
+        setShowWarehouseList(false);
+      } finally {
+        setLoadingWarehouses(false);
+      }
+    },
+    [hasApiKey, selectedCityRef, deliveryMethod, activeDelivery.pointLabel],
+  );
+
+  const handleWarehouseFocus = useCallback(() => {
+    if (!hasApiKey || !selectedCityRef) return;
+
+    setWarehouseLocked(false);
+    setShowWarehouseList(true);
+
+    if (!loadingWarehouses && warehouses.length === 0) {
+      void loadWarehouseOptions(warehouseQuery.trim());
+    }
+  }, [
+    hasApiKey,
+    selectedCityRef,
+    loadingWarehouses,
+    warehouses.length,
+    warehouseQuery,
+    loadWarehouseOptions,
+  ]);
 
   useEffect(() => {
     if (cityLocked) return;
@@ -147,108 +219,24 @@ export function ContactForm() {
       return;
     }
 
-    let cancelled = false;
     const query = warehouseQuery.trim();
-
-    // Якщо номер не введён — показываем список сразу после выбора города.
     if (query.length < 1) {
-      setLoadingWarehouses(true);
-      setNpError("");
-      setWarehouses([]);
-      setShowWarehouseList(false);
       setSelectedWarehouseRef("");
       setSelectedWarehouseName("");
-
-      void (async () => {
-        try {
-          const data = await fetchWarehousesForCity(
-            NOVA_POSHTA_API_KEY,
-            selectedCityRef,
-            deliveryMethod,
-            50,
-          );
-          if (cancelled) return;
-
-          const mapped: WarehouseOption[] = data
-            .slice(0, 50)
-            .map((item) => ({
-              ref: item.Ref,
-              name: formatWarehouseLabel(item),
-            }));
-
-          setWarehouses(mapped);
-          setShowWarehouseList(mapped.length > 0);
-        } catch (error) {
-          if (cancelled) return;
-          const message = error instanceof Error ? error.message : undefined;
-          setNpError(
-            message ??
-              `Не вдалося завантажити ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`,
-          );
-          setWarehouses([]);
-          setShowWarehouseList(false);
-        } finally {
-          if (!cancelled) setLoadingWarehouses(false);
-        }
-      })();
-
-      return () => {
-        cancelled = true;
-      };
     }
 
-    const timer = window.setTimeout(async () => {
-      try {
-        if (cancelled) return;
-        setLoadingWarehouses(true);
-        setNpError("");
+    const timer = window.setTimeout(() => {
+      void loadWarehouseOptions(query);
+    }, query.length < 1 ? 0 : 350);
 
-        const data = await searchWarehouses(
-          NOVA_POSHTA_API_KEY,
-          selectedCityRef,
-          deliveryMethod,
-          query,
-        );
-
-        if (cancelled) return;
-
-        const mapped: WarehouseOption[] = data.map((item) => ({
-          ref: item.Ref,
-          name: formatWarehouseLabel(item),
-        }));
-        setWarehouses(mapped);
-        setShowWarehouseList(mapped.length > 0);
-
-        if (mapped.length === 0) {
-          setNpError(
-            `${activeDelivery.pointLabel} не знайдено. Спробуйте інший номер або адресу.`,
-          );
-        }
-      } catch (error) {
-        if (cancelled) return;
-        const message = error instanceof Error ? error.message : undefined;
-        setNpError(
-          message ??
-            `Не вдалося знайти ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`,
-        );
-        setWarehouses([]);
-        setShowWarehouseList(false);
-      } finally {
-        if (!cancelled) setLoadingWarehouses(false);
-      }
-    }, 350);
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
-    };
+    return () => window.clearTimeout(timer);
   }, [
     warehouseQuery,
     selectedCityRef,
     deliveryMethod,
     hasApiKey,
     warehouseLocked,
-    activeDelivery.pointLabel,
+    loadWarehouseOptions,
   ]);
 
   const handleCityInput = (value: string) => {
@@ -267,6 +255,10 @@ export function ContactForm() {
     setSelectedWarehouseRef("");
     setSelectedWarehouseName("");
     setShowWarehouseList(true);
+  };
+
+  const handleWarehouseClick = () => {
+    handleWarehouseFocus();
   };
 
   const handleCitySelect = (city: CityOption) => {
@@ -466,12 +458,13 @@ export function ContactForm() {
                       autoComplete="off"
                       value={warehouseQuery}
                       onChange={(e) => handleWarehouseInput(e.target.value)}
-                      onFocus={() => warehouses.length > 0 && setShowWarehouseList(true)}
+                      onFocus={handleWarehouseFocus}
+                      onClick={handleWarehouseClick}
                       disabled={!hasApiKey || !selectedCityRef}
                       className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink disabled:cursor-not-allowed disabled:opacity-60"
                       placeholder={
                         selectedCityRef
-                          ? "Введіть номер (наприклад, 15)..."
+                          ? "Натисніть, щоб обрати, або введіть номер..."
                           : "Спочатку оберіть місто"
                       }
                     />
@@ -480,11 +473,16 @@ export function ContactForm() {
                         Шукаємо {activeDelivery.pointLabel.toLowerCase()}...
                       </p>
                     ) : null}
-                    {showWarehouseList && warehouses.length > 0 ? (
+                    {showWarehouseList &&
+                    selectedCityRef &&
+                    (warehouses.length > 0 || loadingWarehouses) ? (
                       <ul
                         role="listbox"
                         className="absolute left-0 right-0 top-full z-20 mt-1 max-h-52 overflow-y-auto rounded-2xl border border-ink/10 bg-card py-1 shadow-card"
                       >
+                        {loadingWarehouses && warehouses.length === 0 ? (
+                          <li className="px-4 py-2.5 text-sm text-muted">Завантаження...</li>
+                        ) : null}
                         {warehouses.map((warehouse) => (
                           <li key={warehouse.ref}>
                             <button
