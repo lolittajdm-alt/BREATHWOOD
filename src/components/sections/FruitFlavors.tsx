@@ -10,7 +10,7 @@ export function FruitFlavors() {
   return (
     <section
       id="flavors"
-      className="section-shell relative -mt-4 w-full overflow-hidden pb-12 pt-6 md:-mt-10 md:pb-32 md:pt-12"
+      className="section-shell relative -mt-2 w-full overflow-hidden pb-6 pt-4 md:-mt-10 md:pb-32 md:pt-12"
     >
       <span className="section-number absolute bottom-4 right-1 sm:bottom-8 sm:right-4 md:right-12">
         04
@@ -33,7 +33,7 @@ export function FruitFlavors() {
           </h2>
         </Reveal>
 
-        <div className="mt-8 grid items-stretch gap-3 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+        <div className="mt-4 grid items-stretch gap-2 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {fruitFlavors.map((flavor, i) => (
             <Reveal key={flavor.id} delay={i * 0.1}>
               <TiltCard className="h-full">
@@ -42,18 +42,18 @@ export function FruitFlavors() {
                   transition={{ duration: 0.4 }}
                   className={`feature-card group flex h-full flex-col bg-gradient-to-br ${flavor.tint} shadow-card sm:min-h-[260px] sm:cursor-grab sm:rounded-[2rem] sm:p-8 sm:active:cursor-grabbing md:min-h-[280px]`}
                 >
-                  <div className="mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/50 text-2xl shadow-sm transition-transform duration-300 group-hover:scale-110 sm:mb-8 sm:h-16 sm:w-16 sm:rounded-2xl sm:text-3xl md:text-4xl">
+                  <div className="mb-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/50 text-base shadow-sm transition-transform duration-300 group-hover:scale-110 sm:mb-8 sm:h-16 sm:w-16 sm:rounded-2xl sm:text-3xl md:text-4xl">
                     {flavor.emoji}
                   </div>
-                  <h3 className="font-display text-lg font-bold leading-snug sm:text-xl md:text-2xl">
+                  <h3 className="font-display text-sm font-bold leading-snug sm:text-xl md:text-2xl">
                     {flavor.name}
                   </h3>
-                  <p className="mt-2 text-sm font-medium uppercase tracking-[0.2em] text-ink/50">
+                  <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.15em] text-ink/50 sm:mt-2 sm:text-sm sm:tracking-[0.2em]">
                     {flavor.abbr} · натуральний аромат
                   </p>
-                  <div className="mt-auto pt-8">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110">
-                      <DoodleIcon type="arrow" className="h-4 w-4" />
+                  <div className="mt-auto pt-3 sm:pt-8">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10">
+                      <DoodleIcon type="arrow" className="h-3 w-3 sm:h-4 sm:w-4" />
                     </div>
                   </div>
                 </motion.div>
