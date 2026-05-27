@@ -27,28 +27,9 @@ export function ContactForm() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">
-            Є ідея або проєкт? Напиши — і створимо щось справді особливе разом.
-          </p>
-        </Reveal>
-
-        <Reveal delay={0.15}>
-          <div className="mt-8 max-w-xl space-y-3 sm:mt-10">
-            {["hello@portofolio.design", "Київ, Україна", "Доступний для фрилансу"].map(
-              (item) => (
-                <p key={item} className="flex items-center gap-3 text-sm">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
-                  {item}
-                </p>
-              )
-            )}
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.2}>
           <form
             onSubmit={handleSubmit}
-            className="glass mt-12 w-full max-w-2xl rounded-xl p-5 sm:mt-14 sm:rounded-[2rem] sm:p-8 md:mt-16 md:p-10 lg:mt-20"
+            className="glass mt-6 w-full rounded-xl p-5 sm:mt-8 sm:rounded-[2rem] sm:p-8 md:p-10"
           >
             {submitted ? (
               <motion.div
