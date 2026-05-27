@@ -31,7 +31,7 @@ export function Services() {
             {orderSteps.map((step, i) => {
               const isLinked = "href" in step && step.href;
               const stepClassName =
-                "order-step-card group flex items-center gap-4 rounded-2xl border-2 border-ink/12 bg-card p-4 shadow-card transition-all duration-300 sm:gap-6 sm:rounded-[1.75rem] sm:p-6 hover:border-accent hover:shadow-glow active:scale-[0.99]";
+                "order-step-card group flex items-center gap-4 rounded-2xl border-2 border-ink/12 bg-card p-4 shadow-card transition-all duration-300 sm:gap-6 sm:rounded-[1.75rem] sm:p-6 hover:border-ink/25 hover:shadow-soft active:scale-[0.99]";
 
               const stepContent = (
                 <>
@@ -42,7 +42,7 @@ export function Services() {
                     {step.title}
                   </h3>
                   {isLinked ? (
-                    <div className="ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-ink transition-colors group-hover:bg-accent sm:h-11 sm:w-11">
+                    <div className="ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-ink transition-colors group-hover:border-ink/25 group-hover:bg-ink/5 sm:h-11 sm:w-11">
                       <DoodleIcon type="arrow" className="h-4 w-4" />
                     </div>
                   ) : null}
