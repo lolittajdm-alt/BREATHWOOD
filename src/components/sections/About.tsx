@@ -23,7 +23,7 @@ const mainFeatures = [
 
 export function About() {
   return (
-    <section id="about" className="section-shell relative -mt-2 pb-6 pt-4 md:-mt-10 md:pb-16 md:pt-12">
+    <section id="about" className="section-shell relative -mt-4 pb-12 pt-8 md:-mt-10 md:pb-16 md:pt-12">
       <span className="section-number absolute top-4 left-1 sm:top-8 sm:left-4 md:left-12">03</span>
 
       <div className="section-container">
@@ -33,9 +33,9 @@ export function About() {
           </h2>
         </Reveal>
 
-        <div className="mt-3 max-w-3xl space-y-3 sm:mt-10 sm:space-y-12">
+        <div className="mt-8 max-w-3xl space-y-8 sm:mt-10 sm:space-y-12">
             <Reveal delay={0.1}>
-              <p className="max-w-2xl text-[11px] leading-relaxed text-muted sm:text-base md:text-lg">
+              <p className="max-w-2xl text-sm leading-relaxed text-muted sm:text-base md:text-lg">
                 Я — це стильний та екологічний девайс, створений для тих, хто прагне
                 м&apos;яко відмовитися від куріння, впоратися зі стресом та впровадити
                 усвідомлене дихання у повсякденне життя.
@@ -49,13 +49,13 @@ export function About() {
                 <h4 className="text-xs font-semibold uppercase tracking-[0.25em] text-muted">
                   Основні переваги та функції
                 </h4>
-                <ul className="mt-2 space-y-2 sm:mt-6 sm:space-y-6">
+                <ul className="mt-4 space-y-4 sm:mt-6 sm:space-y-6">
                   {mainFeatures.map((feature) => (
-                    <li key={feature.title} className="space-y-1 sm:space-y-2">
-                      <p className="font-display text-xs font-bold sm:text-lg md:text-xl">
+                    <li key={feature.title} className="space-y-1.5 sm:space-y-2">
+                      <p className="font-display text-base font-bold sm:text-lg md:text-xl">
                         {feature.title}
                       </p>
-                      <p className="text-[11px] leading-relaxed text-muted sm:text-base">{feature.text}</p>
+                      <p className="text-sm leading-relaxed text-muted sm:text-base">{feature.text}</p>
                     </li>
                   ))}
                 </ul>

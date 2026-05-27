@@ -17,7 +17,7 @@ export function TableOfContent() {
   return (
     <section
       id="toc"
-      className="section-shell relative w-full overflow-hidden py-6 md:py-32"
+      className="section-shell relative w-full overflow-hidden py-16 md:py-32"
     >
       <span className="section-number absolute bottom-4 right-1 sm:bottom-8 sm:right-4 md:right-12">
         05
@@ -40,7 +40,7 @@ export function TableOfContent() {
           </h2>
         </Reveal>
 
-        <div className="mt-4 grid items-stretch gap-2 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+        <div className="mt-10 grid items-stretch gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {tocCards.map((card, i) => (
             <Reveal key={card.id} delay={i * 0.1}>
               <TiltCard className="h-full">
@@ -49,18 +49,18 @@ export function TableOfContent() {
                   transition={{ duration: 0.4 }}
                   className="feature-card group flex h-full flex-col bg-accent shadow-card sm:min-h-[260px] sm:cursor-grab sm:rounded-[2rem] sm:p-8 sm:active:cursor-grabbing md:min-h-[280px]"
                 >
-                  <div className="mb-2 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink/10 transition-transform duration-300 group-hover:scale-110 sm:mb-8 sm:h-16 sm:w-16 sm:rounded-2xl">
+                  <div className="mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ink/10 transition-transform duration-300 group-hover:scale-110 sm:mb-8 sm:h-16 sm:w-16 sm:rounded-2xl">
                     <DoodleIcon
                       type={iconMap[card.icon as keyof typeof iconMap]}
-                      className="h-5 w-5 text-ink sm:h-10 sm:w-10"
+                      className="h-7 w-7 text-ink sm:h-10 sm:w-10"
                     />
                   </div>
-                  <h3 className="font-display text-sm font-bold leading-snug sm:text-xl md:text-2xl">
+                  <h3 className="font-display text-lg font-bold leading-snug sm:text-xl md:text-2xl">
                     {card.title}
                   </h3>
-                  <div className="mt-auto pt-3 sm:pt-8">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10">
-                    <DoodleIcon type="arrow" className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <div className="mt-auto pt-6 sm:pt-8">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10">
+                    <DoodleIcon type="arrow" className="h-4 w-4" />
                     </div>
                   </div>
                 </motion.div>

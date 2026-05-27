@@ -24,15 +24,15 @@ export function Hero() {
     <section
       ref={ref}
       id="hero"
-      className="section-shell relative overflow-hidden pb-6 pt-3 sm:pb-14 sm:pt-8 md:pb-16"
+      className="section-shell relative overflow-hidden pb-10 pt-6 sm:pb-14 sm:pt-8 md:pb-16"
     >
-      <span className="section-number absolute top-12 right-1 sm:top-20 sm:right-4 md:right-12">
+      <span className="section-number absolute top-16 right-2 sm:top-20 sm:right-4 md:right-12">
         01
       </span>
 
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-[min(80vw,600px)] w-[min(80vw,600px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/10" />
 
-      <motion.div style={{ y, opacity }} className="section-container mt-2 sm:mt-8">
+      <motion.div style={{ y, opacity }} className="section-container mt-4 sm:mt-8">
         <div className="relative max-w-4xl">
           <Reveal delay={0.15}>
             <h1 className="hero-title sm:leading-[0.85]">
@@ -68,7 +68,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.4}>
-            <p className="mt-2 max-w-lg text-[10px] leading-relaxed text-muted sm:mt-6 sm:text-sm md:text-base">
+            <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted sm:mt-6 md:text-base">
               Новий ритуал замість сигарет 2026
             </p>
           </Reveal>
@@ -100,12 +100,12 @@ export function Hero() {
         </motion.p>
       </motion.div>
 
-      <div className="section-container mt-4 sm:mt-16 md:mt-20">
+      <div className="section-container mt-8 sm:mt-16 md:mt-20">
         <div className="masonry-grid">
           {portfolioItems.map((item, i) => (
             <Reveal key={item.id} delay={i * 0.08}>
               <motion.div
-                className="masonry-item group relative overflow-hidden rounded-xl sm:rounded-[2rem]"
+                className="masonry-item group relative overflow-hidden rounded-2xl sm:rounded-[2rem]"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.4 }}
               >

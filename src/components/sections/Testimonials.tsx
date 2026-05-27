@@ -14,14 +14,14 @@ function TestimonialCard({ item }: { item: Testimonial }) {
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.35 }}
-      className="flex h-full min-h-[120px] flex-col rounded-lg border border-ink/10 bg-white/80 p-3 shadow-[0_4px_16px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:min-h-[300px] sm:rounded-[2rem] sm:p-8"
+      className="flex h-full min-h-[260px] flex-col rounded-2xl border border-ink/10 bg-white/80 p-6 shadow-[0_4px_16px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:min-h-[300px] sm:p-8"
     >
-      <div className="mb-2 flex shrink-0 gap-px sm:mb-6 sm:gap-1" aria-label="5 зірок">
+      <div className="mb-4 flex shrink-0 gap-1 sm:mb-6" aria-label="5 зірок">
         {Array.from({ length: 5 }).map((_, star) => (
-          <DoodleIcon key={star} type="star" className="h-3 w-3 text-accent sm:h-5 sm:w-5" />
+          <DoodleIcon key={star} type="star" className="h-4 w-4 text-accent sm:h-5 sm:w-5" />
         ))}
       </div>
-      <blockquote className="flex-1 text-xs leading-relaxed sm:text-base md:text-lg">
+      <blockquote className="flex-1 text-sm leading-relaxed sm:text-base md:text-lg">
         &ldquo;{item.quote}&rdquo;
       </blockquote>
       <div className="mt-6 shrink-0 border-t border-ink/10 pt-4 sm:mt-8 sm:pt-6">
@@ -78,7 +78,7 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="section-shell relative -mt-2 pb-8 pt-4 md:-mt-10 md:pb-16 md:pt-12"
+      className="section-shell relative -mt-4 pb-12 pt-8 md:-mt-10 md:pb-16 md:pt-12"
     >
       <span className="section-number absolute top-6 right-2 sm:top-12 sm:right-4 md:right-12">
         02
