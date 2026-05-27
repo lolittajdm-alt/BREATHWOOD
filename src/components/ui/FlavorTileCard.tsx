@@ -40,7 +40,7 @@ export function FlavorTileCard({
         <img
           src={assetPath(image)}
           alt={name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-black/20" />
       </div>
