@@ -37,37 +37,34 @@ export function Services() {
             </Reveal>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 sm:space-y-5">
             {orderSteps.map((step, i) => {
+              const isLinked = "href" in step && step.href;
               const stepClassName =
-                "group flex items-center gap-3 rounded-xl border border-border bg-card/80 p-3.5 backdrop-blur-sm transition-shadow duration-300 active:shadow-soft sm:gap-6 sm:rounded-[1.75rem] sm:p-6 sm:hover:shadow-soft";
+                "order-step-card group flex items-center gap-4 rounded-2xl border-2 border-ink/12 bg-card p-4 shadow-card transition-all duration-300 sm:gap-6 sm:rounded-[1.75rem] sm:p-6 hover:border-accent hover:shadow-glow active:scale-[0.99]";
 
               const stepContent = (
                 <>
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent font-display text-xl font-extrabold text-ink sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent font-display text-2xl font-extrabold text-ink shadow-soft ring-2 ring-ink/10 sm:h-16 sm:w-16 sm:text-3xl">
                     {step.id}
                   </div>
-                  <h3 className="font-display text-base font-bold leading-snug sm:text-xl md:text-2xl">
+                  <h3 className="font-display text-lg font-bold leading-snug sm:text-xl md:text-2xl">
                     {step.title}
                   </h3>
-                  <div
-                    className={`ml-auto flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border bg-card transition-opacity sm:h-10 sm:w-10 ${
-                      "href" in step && step.href
-                        ? "opacity-100 sm:opacity-70 sm:group-hover:opacity-100"
-                        : "hidden opacity-0 md:flex md:opacity-0 md:group-hover:opacity-100"
-                    }`}
-                  >
-                    <DoodleIcon type="arrow" className="h-4 w-4" />
-                  </div>
+                  {isLinked ? (
+                    <div className="ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-surface text-ink transition-colors group-hover:bg-accent sm:h-11 sm:w-11">
+                      <DoodleIcon type="arrow" className="h-4 w-4" />
+                    </div>
+                  ) : null}
                 </>
               );
 
               return (
                 <Reveal key={step.id} delay={i * 0.1}>
-                  {"href" in step && step.href ? (
+                  {isLinked ? (
                     <motion.a
                       href={step.href}
-                      whileHover={{ x: 8 }}
+                      whileHover={{ x: 6 }}
                       transition={{ duration: 0.3 }}
                       className={`${stepClassName} cursor-pointer`}
                     >
@@ -75,7 +72,7 @@ export function Services() {
                     </motion.a>
                   ) : (
                     <motion.div
-                      whileHover={{ x: 8 }}
+                      whileHover={{ x: 6 }}
                       transition={{ duration: 0.3 }}
                       className={stepClassName}
                     >
