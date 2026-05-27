@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { orderSteps } from "@/data/content";
 
 export function Services() {
@@ -49,24 +50,26 @@ export function Services() {
 
               return (
                 <Reveal key={step.id} delay={i * 0.1}>
-                  {isLinked ? (
-                    <motion.a
-                      href={step.href}
-                      whileHover={{ x: 6 }}
-                      transition={{ duration: 0.3 }}
-                      className={`${stepClassName} cursor-pointer`}
-                    >
-                      {stepContent}
-                    </motion.a>
-                  ) : (
-                    <motion.div
-                      whileHover={{ x: 6 }}
-                      transition={{ duration: 0.3 }}
-                      className={stepClassName}
-                    >
-                      {stepContent}
-                    </motion.div>
-                  )}
+                  <TiltCard className="h-full">
+                    {isLinked ? (
+                      <motion.a
+                        href={step.href}
+                        whileHover={{ y: -6, scale: 1.02 }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        className={`${stepClassName} cursor-pointer`}
+                      >
+                        {stepContent}
+                      </motion.a>
+                    ) : (
+                      <motion.div
+                        whileHover={{ y: -6, scale: 1.02 }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        className={stepClassName}
+                      >
+                        {stepContent}
+                      </motion.div>
+                    )}
+                  </TiltCard>
                 </Reveal>
               );
             })}
