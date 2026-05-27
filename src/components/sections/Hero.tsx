@@ -40,12 +40,12 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="relative inline-block">
-              <span className="relative z-10">B</span>
-              <span className="playful-tilt relative z-10">R</span>
-              <span className="relative z-10">E</span>
-              <span className="playful-tilt-alt relative z-10">A</span>
-              <span className="relative z-10">T</span>
-              <span className="relative z-10">H</span>
+              <span className="hero-title-mark">B</span>
+              <span className="hero-title-mark playful-tilt">R</span>
+              <span className="hero-title-mark">E</span>
+              <span className="hero-title-mark playful-tilt-alt">A</span>
+              <span className="hero-title-mark">T</span>
+              <span className="hero-title-mark">H</span>
               <span
                 className="absolute -inset-x-2 bottom-2 top-1 -z-0 rounded-2xl bg-accent md:rounded-3xl"
                 aria-hidden="true"
@@ -60,11 +60,11 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="relative inline-block">
-              <span className="relative z-10">W</span>
-              <span className="playful-tilt-alt relative z-10">O</span>
-              <span className="relative z-10">O</span>
-              <span className="playful-tilt relative z-10">D</span>
-              <span className="text-ink/20">.</span>
+              <span className="hero-title-mark">W</span>
+              <span className="hero-title-mark playful-tilt-alt">O</span>
+              <span className="hero-title-mark">O</span>
+              <span className="hero-title-mark playful-tilt">D</span>
+              <span className="hero-title-dot">.</span>
               <span
                 className="absolute -inset-x-2 bottom-2 top-1 -z-0 rounded-2xl bg-accent md:rounded-3xl"
                 aria-hidden="true"

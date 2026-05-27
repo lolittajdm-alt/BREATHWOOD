@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { DoodleIcon } from "@/components/ui/DoodleIcon";
+import { FlavorTileCard } from "@/components/ui/FlavorTileCard";
 import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -18,10 +17,7 @@ export function FruitFlavors() {
         05
       </span>
 
-      <p
-        className="bg-watermark pointer-events-none absolute top-1/2 left-1/2 max-w-[100vw] -translate-x-1/2 -translate-y-1/2 select-none overflow-hidden font-display font-black uppercase leading-none text-ink/[0.03]"
-        aria-hidden="true"
-      >
+      <p className="bg-watermark pointer-events-none absolute top-1/2 left-1/2 max-w-[100vw] -translate-x-1/2 -translate-y-1/2 select-none overflow-hidden font-display font-black uppercase leading-none" aria-hidden="true">
         СМАКИ
       </p>
 
@@ -30,38 +26,33 @@ export function FruitFlavors() {
           <SectionHeading line1="ФРУКТОВІ" line2="СМАКИ" />
         </Reveal>
 
-        <HorizontalScrollStrip ariaLabel="Фруктові смаки" className="mt-10 lg:mt-16">
-          {fruitFlavors.map((flavor, i) => (
-            <StripItem key={flavor.id} columns={3}>
-              <Reveal delay={i * 0.05} className="h-full w-full">
-                <TiltCard className="h-full">
-                  <motion.div
-                    whileHover={{ scale: 1.03 }}
-                    transition={{ duration: 0.35 }}
-                    className={`flavor-card group flex aspect-square h-full flex-col bg-gradient-to-br ${flavor.tint} ${flavor.darkTint}`}
-                  >
-                    <div className="flex flex-1 flex-col items-center justify-center text-center">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-card/70 text-2xl shadow-soft transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 sm:text-3xl">
-                        {flavor.emoji}
-                      </div>
-                      <h3 className="mt-3 font-display text-sm font-bold leading-tight sm:text-base">
-                        {flavor.name}
-                      </h3>
-                      <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.15em] text-ink/50 sm:text-xs">
-                        {flavor.abbr}
-                      </p>
-                    </div>
-                    <div className="flex justify-center pt-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110 sm:h-9 sm:w-9">
-                        <DoodleIcon type="arrow" className="h-3.5 w-3.5" />
-                      </div>
-                    </div>
-                  </motion.div>
-                </TiltCard>
-              </Reveal>
+        <HorizontalScrollStrip ariaLabel="Фруктові смаки" className="mt-10 lg:hidden">
+          {fruitFlavors.map((flavor) => (
+            <StripItem key={flavor.id} columns={2}>
+              <FlavorTileCard
+                name={flavor.name}
+                emoji={flavor.emoji}
+                tint={flavor.tint}
+                darkTint={flavor.darkTint}
+              />
             </StripItem>
           ))}
         </HorizontalScrollStrip>
+
+        <div className="mt-10 hidden grid-cols-3 gap-6 lg:mt-16 lg:grid">
+          {fruitFlavors.map((flavor, i) => (
+            <Reveal key={flavor.id} delay={i * 0.05}>
+              <TiltCard className="h-full">
+                <FlavorTileCard
+                  name={flavor.name}
+                  emoji={flavor.emoji}
+                  tint={flavor.tint}
+                  darkTint={flavor.darkTint}
+                />
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );

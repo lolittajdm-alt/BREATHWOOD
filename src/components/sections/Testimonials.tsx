@@ -14,19 +14,19 @@ function TestimonialCard({ item }: { item: Testimonial }) {
     <motion.div
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.35 }}
-      className="testimonial-card flex h-full min-h-[220px] flex-col rounded-[1.5rem] border border-border bg-card p-5 shadow-soft backdrop-blur-sm sm:min-h-[280px] sm:rounded-[2rem] sm:p-6 lg:min-h-[300px] lg:p-8"
+      className="testimonial-card flex h-[260px] flex-col rounded-[1.5rem] border border-border bg-card p-5 shadow-soft backdrop-blur-sm sm:h-[300px] sm:rounded-[2rem] sm:p-6"
     >
-      <div className="mb-3 flex shrink-0 gap-0.5 sm:mb-6 sm:gap-1" aria-label="5 зірок">
+      <div className="mb-3 flex h-5 shrink-0 items-center gap-0.5 sm:mb-4 sm:h-6 sm:gap-1" aria-label="5 зірок">
         {Array.from({ length: 5 }).map((_, star) => (
           <DoodleIcon key={star} type="star" className="h-3.5 w-3.5 text-accent sm:h-5 sm:w-5" />
         ))}
       </div>
-      <blockquote className="flex-1 text-xs leading-relaxed sm:text-base lg:text-lg">
+      <blockquote className="line-clamp-6 flex-1 text-xs leading-relaxed sm:line-clamp-7 sm:text-base">
         &ldquo;{item.quote}&rdquo;
       </blockquote>
-      <div className="mt-4 shrink-0 border-t border-border pt-3 sm:mt-8 sm:pt-6">
-        <p className="font-display text-sm font-bold sm:text-lg">{item.author}</p>
-        <p className="mt-0.5 text-[10px] text-muted sm:text-sm">{item.role}</p>
+      <div className="mt-4 shrink-0 border-t border-border pt-3 sm:mt-5 sm:pt-4">
+        <p className="truncate font-display text-sm font-bold sm:text-lg">{item.author}</p>
+        <p className="mt-0.5 truncate text-[10px] text-muted sm:text-sm">{item.role}</p>
       </div>
     </motion.div>
   );

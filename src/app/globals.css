@@ -148,6 +148,27 @@
 
   .bg-watermark {
     font-size: clamp(3rem, 18vw, 12rem);
+    color: color-mix(in srgb, var(--color-ink) 7%, transparent);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .bg-watermark {
+      color: color-mix(in srgb, var(--color-ink) 12%, transparent);
+    }
+  }
+
+  .hero-title-mark {
+    @apply relative z-10 text-ink;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .hero-title-mark {
+      color: #0a0a0a;
+    }
+
+    .hero-title-dot {
+      color: color-mix(in srgb, #0a0a0a 25%, transparent);
+    }
   }
 
   .feature-card {
@@ -195,10 +216,6 @@
     @apply aspect-square min-h-0 rounded-xl p-4 sm:rounded-[2rem] sm:p-6;
   }
 
-  .flavor-card {
-    @apply aspect-square min-h-0 rounded-xl border p-4 shadow-flavor sm:rounded-[2rem] sm:p-5;
-    border-color: color-mix(in srgb, var(--color-border) 65%, transparent);
-  }
 
   /* Mobile & tablet: 2 columns */
   .masonry-grid {
@@ -258,7 +275,7 @@
     }
 
     .testimonial-card {
-      @apply min-h-[200px] rounded-xl p-4;
+      @apply rounded-xl;
     }
   }
 
