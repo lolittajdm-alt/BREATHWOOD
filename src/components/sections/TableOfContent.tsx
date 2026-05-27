@@ -27,15 +27,13 @@ export function TableOfContent() {
         className="bg-watermark pointer-events-none absolute top-1/2 left-1/2 max-w-[100vw] -translate-x-1/2 -translate-y-1/2 select-none overflow-hidden font-display font-black uppercase leading-none text-ink/[0.03]"
         aria-hidden="true"
       >
-        ЗМІСТ
+        ПРИСТРОЇ
       </p>
 
       <div className="section-container">
         <Reveal>
           <h2 className="section-heading-lg">
-            ЗМІСТ
-            <br />
-            <span className="playful-tilt">НАВИЧОК</span>
+            <span className="playful-tilt">ПРИСТРОЇ</span>
             <span className="text-accent">.</span>
           </h2>
         </Reveal>
