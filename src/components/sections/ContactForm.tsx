@@ -6,9 +6,13 @@ import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import {
+  callNovaPoshta,
+  deliveryMethodOptions,
+  type DeliveryMethod,
+} from "@/lib/novaPoshta";
 
 const NOVA_POSHTA_API_KEY = process.env.NEXT_PUBLIC_NOVA_POSHTA_API_KEY ?? "";
-const NOVA_POSHTA_API_URL = "https://api.novaposhta.ua/v2.0/json/";
 
 type CityOption = {
   ref: string;
@@ -22,6 +26,7 @@ type WarehouseOption = {
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("warehouse");
   const [cityQuery, setCityQuery] = useState("");
   const [cities, setCities] = useState<CityOption[]>([]);
   const [selectedCityRef, setSelectedCityRef] = useState("");
@@ -32,6 +37,7 @@ export function ContactForm() {
   const [npError, setNpError] = useState("");
 
   const hasApiKey = NOVA_POSHTA_API_KEY.length > 0;
+  const activeDelivery = deliveryMethodOptions.find((item) => item.id === deliveryMethod)!;
 
   useEffect(() => {
     const query = cityQuery.trim();
@@ -48,21 +54,13 @@ export function ContactForm() {
         setLoadingCities(true);
         setNpError("");
 
-        const response = await fetch(NOVA_POSHTA_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            apiKey: NOVA_POSHTA_API_KEY,
-            modelName: "Address",
-            calledMethod: "searchSettlements",
-            methodProperties: {
-              CityName: query,
-              Limit: 20,
-            },
-          }),
+        const json = await callNovaPoshta<
+          { Addresses: { DeliveryCity: string; Present: string }[] }[]
+        >(NOVA_POSHTA_API_KEY, "Address", "searchSettlements", {
+          CityName: query,
+          Limit: 20,
         });
 
-        const json = await response.json();
         if (!json?.success) {
           setNpError("Нова Пошта: не вдалося знайти міста. Перевірте API-ключ.");
           setCities([]);
@@ -70,12 +68,10 @@ export function ContactForm() {
         }
 
         const addresses = json?.data?.[0]?.Addresses ?? [];
-        const mapped: CityOption[] = addresses.map(
-          (item: { DeliveryCity: string; Present: string }) => ({
-            ref: item.DeliveryCity,
-            name: item.Present,
-          }),
-        );
+        const mapped: CityOption[] = addresses.map((item) => ({
+          ref: item.DeliveryCity,
+          name: item.Present,
+        }));
         setCities(mapped);
       } catch {
         setNpError("Не вдалося завантажити міста Нової Пошти.");
@@ -99,49 +95,50 @@ export function ContactForm() {
         setLoadingWarehouses(true);
         setNpError("");
 
-        const response = await fetch(NOVA_POSHTA_API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            apiKey: NOVA_POSHTA_API_KEY,
-            modelName: "AddressGeneral",
-            calledMethod: "getWarehouses",
-            methodProperties: {
-              CityRef: selectedCityRef,
-              Limit: 100,
-            },
-          }),
-        });
+        const json = await callNovaPoshta<{ Ref: string; Description: string }[]>(
+          NOVA_POSHTA_API_KEY,
+          "AddressGeneral",
+          "getWarehouses",
+          {
+            CityRef: selectedCityRef,
+            TypeOfWarehouseRef: activeDelivery.typeRef,
+            Limit: 500,
+          },
+        );
 
-        const json = await response.json();
         if (!json?.success) {
-          setNpError("Нова Пошта: не вдалося завантажити відділення.");
+          setNpError(`Нова Пошта: не вдалося завантажити ${activeDelivery.pointLabel.toLowerCase()}.`);
           setWarehouses([]);
           return;
         }
 
-        const mapped: WarehouseOption[] = (json?.data ?? []).map(
-          (item: { Ref: string; Description: string }) => ({
-            ref: item.Ref,
-            name: item.Description,
-          }),
-        );
+        const mapped: WarehouseOption[] = (json?.data ?? []).map((item) => ({
+          ref: item.Ref,
+          name: item.Description,
+        }));
         setWarehouses(mapped);
+        setSelectedWarehouseRef("");
       } catch {
-        setNpError("Не вдалося завантажити відділення Нової Пошти.");
+        setNpError(`Не вдалося завантажити ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`);
       } finally {
         setLoadingWarehouses(false);
       }
     };
 
     void loadWarehouses();
-  }, [selectedCityRef, hasApiKey]);
+  }, [selectedCityRef, deliveryMethod, hasApiKey, activeDelivery.typeRef, activeDelivery.pointLabel]);
 
   const handleCityPick = (value: string) => {
     setCityQuery(value);
     const found = cities.find((city) => city.name === value);
     setSelectedCityRef(found?.ref ?? "");
     setSelectedWarehouseRef("");
+  };
+
+  const handleDeliveryMethodChange = (method: DeliveryMethod) => {
+    setDeliveryMethod(method);
+    setSelectedWarehouseRef("");
+    setNpError("");
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -151,7 +148,7 @@ export function ContactForm() {
       return;
     }
     if (!selectedCityRef || !selectedWarehouseRef) {
-      setNpError("Оберіть місто та відділення для доставки.");
+      setNpError(`Оберіть місто та ${activeDelivery.pointLabel.toLowerCase()} для доставки.`);
       return;
     }
     setSubmitted(true);
@@ -182,7 +179,8 @@ export function ContactForm() {
                 </div>
                 <h3 className="font-display text-2xl font-bold">Повідомлення надіслано!</h3>
                 <p className="mt-2 text-muted">
-                  Заявку на доставку отримано. Зв&apos;яжемось із вами найближчим часом.
+                  Заявку на доставку ({activeDelivery.label}) отримано. Зв&apos;яжемось із вами
+                  найближчим часом.
                 </p>
               </motion.div>
             ) : (
@@ -224,6 +222,40 @@ export function ContactForm() {
                       placeholder="+380 XX XXX XX XX"
                     />
                   </div>
+
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                      Спосіб отримання
+                    </p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      {deliveryMethodOptions.map((option) => {
+                        const selected = deliveryMethod === option.id;
+                        return (
+                          <button
+                            key={option.id}
+                            type="button"
+                            disabled={!hasApiKey}
+                            onClick={() => handleDeliveryMethodChange(option.id)}
+                            className={`rounded-2xl border px-4 py-3 text-left transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
+                              selected
+                                ? "border-ink bg-ink text-surface shadow-soft"
+                                : "border-ink/15 bg-card/30 hover:border-ink/30"
+                            }`}
+                          >
+                            <span className="block font-display text-sm font-bold sm:text-base">
+                              {option.label}
+                            </span>
+                            <span
+                              className={`mt-1 block text-xs ${selected ? "text-surface/80" : "text-muted"}`}
+                            >
+                              {option.description}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <div>
                     <label
                       htmlFor="city"
@@ -255,7 +287,7 @@ export function ContactForm() {
                       htmlFor="warehouse"
                       className="text-xs font-semibold uppercase tracking-wider text-muted"
                     >
-                      Відділення
+                      {activeDelivery.pointLabel}
                     </label>
                     <select
                       id="warehouse"
@@ -267,9 +299,9 @@ export function ContactForm() {
                     >
                       <option value="">
                         {loadingWarehouses
-                          ? "Завантажуємо відділення..."
+                          ? `Завантажуємо ${activeDelivery.pointLabel.toLowerCase()}...`
                           : selectedCityRef
-                            ? "Оберіть відділення"
+                            ? `Оберіть ${activeDelivery.pointLabel.toLowerCase()}`
                             : "Спочатку оберіть місто"}
                       </option>
                       {warehouses.map((warehouse) => (
@@ -278,6 +310,12 @@ export function ContactForm() {
                         </option>
                       ))}
                     </select>
+                    {warehouses.length === 0 && selectedCityRef && !loadingWarehouses ? (
+                      <p className="mt-2 text-xs text-muted">
+                        У цьому місті немає доступних {activeDelivery.pointLabel.toLowerCase()} для
+                        обраного способу.
+                      </p>
+                    ) : null}
                   </div>
                   <div>
                     <label
