@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { Reveal } from "@/components/ui/Reveal";
-import { useDesktopLayout } from "@/hooks/useDesktopLayout";
 import { useItemsPerPage } from "@/hooks/useItemsPerPage";
 import { testimonials } from "@/data/content";
 
@@ -15,28 +14,26 @@ function TestimonialCard({ item }: { item: Testimonial }) {
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.35 }}
-      className="testimonial-card flex h-full min-h-[320px] flex-col rounded-[2rem] border border-ink/10 bg-white/80 p-8 shadow-[0_4px_16px_rgba(0,0,0,0.04)] backdrop-blur-sm"
+      className="testimonial-card flex h-full flex-col rounded-[2rem] border border-ink/10 bg-white/80 p-6 shadow-[0_4px_16px_rgba(0,0,0,0.04)] backdrop-blur-sm lg:min-h-[320px] lg:p-8"
     >
-      <div className="mb-4 flex shrink-0 gap-1 sm:mb-6" aria-label="5 зірок">
+      <div className="mb-3 flex shrink-0 gap-0.5 sm:mb-6 sm:gap-1" aria-label="5 зірок">
         {Array.from({ length: 5 }).map((_, star) => (
-          <DoodleIcon key={star} type="star" className="h-4 w-4 text-accent sm:h-5 sm:w-5" />
+          <DoodleIcon key={star} type="star" className="h-3.5 w-3.5 text-accent sm:h-5 sm:w-5" />
         ))}
       </div>
-      <blockquote className="flex-1 text-sm leading-relaxed sm:text-base md:text-lg">
+      <blockquote className="flex-1 text-xs leading-relaxed sm:text-base lg:text-lg">
         &ldquo;{item.quote}&rdquo;
       </blockquote>
-      <div className="mt-6 shrink-0 border-t border-ink/10 pt-4 sm:mt-8 sm:pt-6">
-        <p className="font-display text-base font-bold sm:text-lg">{item.author}</p>
-        <p className="mt-1 text-xs text-muted sm:text-sm">{item.role}</p>
+      <div className="mt-4 shrink-0 border-t border-ink/10 pt-3 sm:mt-8 sm:pt-6">
+        <p className="font-display text-sm font-bold sm:text-lg">{item.author}</p>
+        <p className="mt-0.5 text-[10px] text-muted sm:text-sm">{item.role}</p>
       </div>
     </motion.div>
   );
 }
 
 export function Testimonials() {
-  const isDesktopLayout = useDesktopLayout();
-  const responsiveItems = useItemsPerPage({ sm: 1, md: 2, lg: 3 });
-  const itemsPerPage = isDesktopLayout ? 3 : responsiveItems;
+  const itemsPerPage = useItemsPerPage({ sm: 2, md: 2, lg: 3 });
   const [page, setPage] = useState(0);
   const [direction, setDirection] = useState(0);
 
@@ -127,7 +124,7 @@ export function Testimonials() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: direction >= 0 ? -48 : 48 }}
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="testimonials-grid grid items-stretch gap-6 lg:grid-cols-3"
+              className="testimonials-grid grid-cols-2-mobile items-stretch lg:grid-cols-3 lg:gap-6"
             >
               {currentItems.map((item) => (
                 <div key={item.id} className="p-1 sm:p-2">

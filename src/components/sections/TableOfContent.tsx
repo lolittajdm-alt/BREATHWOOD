@@ -40,7 +40,7 @@ export function TableOfContent() {
           </h2>
         </Reveal>
 
-        <div className="toc-grid mt-16 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="toc-grid grid-cols-2-mobile mt-10 items-stretch lg:mt-16 lg:grid-cols-4 lg:gap-6">
           {tocCards.map((card, i) => (
             <Reveal key={card.id} delay={i * 0.1}>
               <TiltCard className="h-full">

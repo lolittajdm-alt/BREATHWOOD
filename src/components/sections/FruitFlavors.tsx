@@ -33,7 +33,7 @@ export function FruitFlavors() {
           </h2>
         </Reveal>
 
-        <div className="flavors-grid mt-16 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="flavors-grid grid-cols-2-mobile mt-10 items-stretch lg:mt-16 lg:grid-cols-3 lg:gap-6">
           {fruitFlavors.map((flavor, i) => (
             <Reveal key={flavor.id} delay={i * 0.1}>
               <TiltCard className="h-full">

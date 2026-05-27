@@ -1,4 +1,3 @@
-import { MobileDesktopScale } from "@/components/layout/MobileDesktopScale";
 import { About } from "@/components/sections/About";
 import { FruitFlavors } from "@/components/sections/FruitFlavors";
 import { ContactForm } from "@/components/sections/ContactForm";
@@ -10,17 +9,15 @@ import { Testimonials } from "@/components/sections/Testimonials";
 
 export default function Home() {
   return (
-    <MobileDesktopScale>
-      <main className="relative">
-        <Hero />
-        <Testimonials />
-        <About />
-        <FruitFlavors />
-        <TableOfContent />
-        <Services />
-        <ContactForm />
-        <Footer />
-      </main>
-    </MobileDesktopScale>
+    <main className="relative">
+      <Hero />
+      <Testimonials />
+      <About />
+      <FruitFlavors />
+      <TableOfContent />
+      <Services />
+      <ContactForm />
+      <Footer />
+    </main>
   );
 }
