@@ -41,7 +41,7 @@ export function About() {
               </p>
             </Reveal>
 
-            <div className="h-px w-full bg-ink/10" />
+            <div className="h-px w-full bg-border" />
 
             <Reveal delay={0.15}>
               <div>

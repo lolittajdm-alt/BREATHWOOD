@@ -13,7 +13,7 @@ const links = [
 
 export function Footer() {
   return (
-    <footer className="section-shell relative border-t border-ink/10 py-10 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:py-16">
+    <footer className="section-shell relative border-t border-border py-10 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:py-16">
       <div className="section-container">
         <div className="footer-layout flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
           <div>
@@ -45,18 +45,18 @@ export function Footer() {
 
           <MagneticButton
             href="#hero"
-            className="flex h-12 w-12 shrink-0 items-center justify-center self-start rounded-full border border-ink/20 bg-white transition-colors active:bg-accent sm:h-14 sm:w-14 sm:self-auto sm:hover:bg-accent"
+            className="flex h-12 w-12 shrink-0 items-center justify-center self-start rounded-full border border-border bg-card transition-colors active:bg-accent sm:h-14 sm:w-14 sm:self-auto sm:hover:bg-accent"
           >
             <DoodleIcon type="arrow" className="h-5 w-5 -rotate-90" />
           </MagneticButton>
         </div>
 
         <div className="mt-10 flex items-center justify-center gap-3 sm:mt-16 sm:gap-4">
-          <div className="h-px flex-1 bg-ink/10" />
+          <div className="h-px flex-1 bg-border" />
           <p className="text-center text-[10px] uppercase tracking-[0.2em] text-muted sm:text-xs sm:tracking-[0.3em]">
             Створено з любов’ю у 2026
           </p>
-          <div className="h-px flex-1 bg-ink/10" />
+          <div className="h-px flex-1 bg-border" />
         </div>
       </div>
     </footer>

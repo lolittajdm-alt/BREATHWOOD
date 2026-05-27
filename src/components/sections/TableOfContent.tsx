@@ -44,7 +44,7 @@ export function TableOfContent() {
                   whileHover={{ y: -8, boxShadow: "0 20px 50px rgba(0,0,0,0.12)" }}
                   transition={{ duration: 0.4 }}
                   aria-label={card.title}
-                  className="device-card group flex flex-col items-center justify-between bg-accent shadow-card sm:cursor-grab sm:active:cursor-grabbing"
+                  className="device-card group flex flex-col items-center justify-between border border-border/40 bg-accent shadow-card sm:cursor-grab sm:active:cursor-grabbing"
                 >
                   <div className="flex flex-1 items-center justify-center">
                     <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-ink/10 transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20 sm:rounded-2xl">

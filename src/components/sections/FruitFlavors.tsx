@@ -38,10 +38,10 @@ export function FruitFlavors() {
                   <motion.div
                     whileHover={{ scale: 1.03 }}
                     transition={{ duration: 0.35 }}
-                    className={`flavor-card group flex aspect-square h-full flex-col bg-gradient-to-br ${flavor.tint} ring-1 ring-ink/10 shadow-[0_12px_36px_rgba(0,0,0,0.1)]`}
+                    className={`flavor-card group flex aspect-square h-full flex-col bg-gradient-to-br ${flavor.tint} ${flavor.darkTint}`}
                   >
                     <div className="flex flex-1 flex-col items-center justify-center text-center">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/60 text-2xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 sm:text-3xl">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-card/70 text-2xl shadow-soft transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 sm:text-3xl">
                         {flavor.emoji}
                       </div>
                       <h3 className="mt-3 font-display text-sm font-bold leading-tight sm:text-base">

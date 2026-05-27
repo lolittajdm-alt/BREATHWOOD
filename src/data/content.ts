@@ -131,12 +131,54 @@ export const orderSteps = [
 ];
 
 export const fruitFlavors = [
-  { id: 1, name: "Манго", abbr: "Ма", emoji: "🥭", tint: "from-amber-200/95 to-orange-100" },
-  { id: 2, name: "Полуниця", abbr: "По", emoji: "🍓", tint: "from-rose-200/95 to-pink-100" },
-  { id: 3, name: "Лимон", abbr: "Лі", emoji: "🍋", tint: "from-yellow-200/95 to-lime-100" },
-  { id: 4, name: "Вишня", abbr: "Ви", emoji: "🍒", tint: "from-red-200/95 to-rose-100" },
-  { id: 5, name: "Ківі", abbr: "Кі", emoji: "🥝", tint: "from-green-200/95 to-emerald-100" },
-  { id: 6, name: "Персик", abbr: "Пе", emoji: "🍑", tint: "from-orange-200/95 to-amber-100" },
+  {
+    id: 1,
+    name: "Манго",
+    abbr: "Ма",
+    emoji: "🥭",
+    tint: "from-amber-200/95 to-orange-100",
+    darkTint: "dark:from-amber-600/35 dark:to-orange-950/55",
+  },
+  {
+    id: 2,
+    name: "Полуниця",
+    abbr: "По",
+    emoji: "🍓",
+    tint: "from-rose-200/95 to-pink-100",
+    darkTint: "dark:from-rose-600/30 dark:to-rose-950/55",
+  },
+  {
+    id: 3,
+    name: "Лимон",
+    abbr: "Лі",
+    emoji: "🍋",
+    tint: "from-yellow-200/95 to-lime-100",
+    darkTint: "dark:from-yellow-600/28 dark:to-lime-950/50",
+  },
+  {
+    id: 4,
+    name: "Вишня",
+    abbr: "Ви",
+    emoji: "🍒",
+    tint: "from-red-200/95 to-rose-100",
+    darkTint: "dark:from-red-600/32 dark:to-red-950/55",
+  },
+  {
+    id: 5,
+    name: "Ківі",
+    abbr: "Кі",
+    emoji: "🥝",
+    tint: "from-green-200/95 to-emerald-100",
+    darkTint: "dark:from-emerald-600/30 dark:to-emerald-950/55",
+  },
+  {
+    id: 6,
+    name: "Персик",
+    abbr: "Пе",
+    emoji: "🍑",
+    tint: "from-orange-200/95 to-amber-100",
+    darkTint: "dark:from-orange-600/32 dark:to-amber-950/55",
+  },
 ];
 
 export const experience = [

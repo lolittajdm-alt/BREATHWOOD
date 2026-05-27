@@ -116,7 +116,7 @@ export function ContactForm() {
         </div>
 
         <Reveal delay={0.25}>
-          <div className="contact-footer mt-20 grid gap-6 border-t border-ink/10 pt-16 sm:grid-cols-[1fr_auto]">
+          <div className="contact-footer mt-20 grid gap-6 border-t border-border pt-16 sm:grid-cols-[1fr_auto]">
             <div className="glass rounded-3xl p-6 md:p-8">
               <h3 className="font-display text-2xl font-bold md:text-3xl">Контакти</h3>
               <ul className="mt-6 space-y-3 text-sm md:text-base">

@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "media",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,11 +11,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        accent: "#FFE566",
-        "accent-dark": "#F5D547",
-        ink: "#0A0A0A",
-        muted: "#6B6B6B",
-        surface: "#F5F5F0",
+        accent: "var(--color-accent)",
+        "accent-dark": "var(--color-accent-dark)",
+        ink: "var(--color-ink)",
+        muted: "var(--color-muted)",
+        surface: "var(--color-surface)",
+        card: "var(--color-card)",
+        border: "var(--color-border)",
       },
       fontFamily: {
         display: ["var(--font-display)", "system-ui", "sans-serif"],
@@ -25,9 +28,10 @@ const config: Config = {
         "5xl": "2.25rem",
       },
       boxShadow: {
-        soft: "0 8px 32px rgba(0, 0, 0, 0.08)",
-        card: "0 12px 40px rgba(0, 0, 0, 0.1)",
-        glow: "0 0 60px rgba(255, 229, 102, 0.3)",
+        soft: "var(--shadow-soft)",
+        card: "var(--shadow-card)",
+        glow: "var(--shadow-glow)",
+        flavor: "var(--shadow-flavor)",
       },
       animation: {
         float: "float 6s ease-in-out infinite",

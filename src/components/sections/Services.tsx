@@ -43,7 +43,7 @@ export function Services() {
                 <motion.div
                   whileHover={{ x: 8 }}
                   transition={{ duration: 0.3 }}
-                  className="group flex items-center gap-3 rounded-xl border border-ink/8 bg-white/60 p-3.5 backdrop-blur-sm transition-shadow duration-300 active:shadow-[0_4px_16px_rgba(0,0,0,0.04)] sm:gap-6 sm:rounded-[1.75rem] sm:p-6 sm:hover:shadow-[0_4px_16px_rgba(0,0,0,0.04)]"
+                  className="group flex items-center gap-3 rounded-xl border border-border bg-card/80 p-3.5 backdrop-blur-sm transition-shadow duration-300 active:shadow-soft sm:gap-6 sm:rounded-[1.75rem] sm:p-6 sm:hover:shadow-soft"
                 >
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent font-display text-xl font-extrabold text-ink sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl">
                     {step.id}
