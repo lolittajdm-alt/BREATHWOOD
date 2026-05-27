@@ -17,17 +17,17 @@ export const deliveryMethodOptions: {
 }[] = [
   {
     id: "warehouse",
-    label: "Відділення",
+    label: "Відділеня Нової Пошти",
     description: "Самовивіз з відділення Нової Пошти",
     typeRef: NP_WAREHOUSE_BRANCH_REF,
-    pointLabel: "Відділення",
+    pointLabel: "Відділеня Нової Пошти",
   },
   {
     id: "postomat",
-    label: "Поштомат",
+    label: "Поштомат Нової Пошти",
     description: "Отримання у поштоматі Нової Пошти",
     typeRef: NP_WAREHOUSE_POSTOMAT_REF,
-    pointLabel: "Поштомат",
+    pointLabel: "Поштомат Нової Пошти",
   },
 ];
 

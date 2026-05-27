@@ -7,8 +7,9 @@ import {
   useRef,
   useState,
   type FormEvent,
+  type ReactNode,
 } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { NovaPoshtaLogo } from "@/components/ui/NovaPoshtaLogo";
@@ -54,6 +55,31 @@ function mapWarehouseItem(item: WarehouseApiItem): WarehouseOption {
   };
 }
 
+const formStepTransition = { duration: 0.4, ease: [0.22, 1, 0.36, 1] as const };
+
+function FormStep({
+  show,
+  children,
+}: {
+  show: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <AnimatePresence initial={false}>
+      {show ? (
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={formStepTransition}
+        >
+          {children}
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+}
+
 function filterWarehousesLocal(
   items: WarehouseOption[],
   query: string,
@@ -76,7 +102,7 @@ function filterWarehousesLocal(
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
-  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("warehouse");
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
   const [cityQuery, setCityQuery] = useState("");
   const [cityLocked, setCityLocked] = useState(false);
   const [cities, setCities] = useState<CityOption[]>([]);
@@ -100,8 +126,15 @@ export function ContactForm() {
   const warehouseLoadIdRef = useRef(0);
 
   const hasApiKey = NOVA_POSHTA_API_KEY.length > 0;
-  const activeDelivery = deliveryMethodOptions.find((item) => item.id === deliveryMethod)!;
-  const warehouseCacheKey = selectedCityRef ? `${selectedCityRef}:${deliveryMethod}` : "";
+  const activeDelivery = deliveryMethod
+    ? deliveryMethodOptions.find((item) => item.id === deliveryMethod)
+    : null;
+  const warehouseCacheKey =
+    selectedCityRef && deliveryMethod ? `${selectedCityRef}:${deliveryMethod}` : "";
+
+  const showCityStep = deliveryMethod !== null;
+  const showWarehouseStep = Boolean(selectedCityRef && deliveryMethod);
+  const showCommentStep = Boolean(selectedWarehouseRef);
 
   const resetWarehouseSelection = useCallback(() => {
     setWarehouseInput("");
@@ -112,6 +145,16 @@ export function ContactForm() {
     setSelectedWarehouseRef("");
     setSelectedWarehouseName("");
   }, []);
+
+  const resetCitySelection = useCallback(() => {
+    setCityQuery("");
+    setCityLocked(false);
+    setCities([]);
+    setShowCityList(false);
+    setSelectedCityRef("");
+    setSelectedCityName("");
+    resetWarehouseSelection();
+  }, [resetWarehouseSelection]);
 
   const applyCitySelection = useCallback(
     (city: CityOption) => {
@@ -136,7 +179,7 @@ export function ContactForm() {
   }, []);
 
   const loadWarehousesForSelectedCity = useCallback(async () => {
-    if (!hasApiKey || !selectedCityRef) return;
+    if (!hasApiKey || !selectedCityRef || !deliveryMethod) return;
 
     const requestId = ++warehouseLoadIdRef.current;
     setLoadingWarehouses(true);
@@ -161,7 +204,7 @@ export function ContactForm() {
       const message = error instanceof Error ? error.message : undefined;
       setNpError(
         message ??
-          `Не вдалося завантажити ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`,
+          `Не вдалося завантажити ${activeDelivery?.pointLabel.toLowerCase() ?? "відділення"} Нової Пошти.`,
       );
       setAllWarehouses([]);
       setWarehousesCacheKey(warehouseCacheKey);
@@ -175,11 +218,11 @@ export function ContactForm() {
     selectedCityRef,
     deliveryMethod,
     warehouseCacheKey,
-    activeDelivery.pointLabel,
+    activeDelivery?.pointLabel,
   ]);
 
   const openWarehouseDropdown = useCallback(() => {
-    if (!hasApiKey || !selectedCityRef) return;
+    if (!hasApiKey || !selectedCityRef || !deliveryMethod) return;
 
     setWarehouseOpen(true);
     setNpError("");
@@ -232,7 +275,7 @@ export function ContactForm() {
   ]);
 
   useEffect(() => {
-    if (!warehouseOpen || !selectedCityRef || !hasApiKey) return;
+    if (!warehouseOpen || !selectedCityRef || !hasApiKey || !deliveryMethod) return;
 
     const query = warehouseInput.trim();
     if (query.length < 1) {
@@ -268,7 +311,7 @@ export function ContactForm() {
         const message = error instanceof Error ? error.message : undefined;
         setNpError(
           message ??
-            `Не вдалося знайти ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`,
+            `Не вдалося знайти ${activeDelivery?.pointLabel.toLowerCase() ?? "відділення"} Нової Пошти.`,
         );
         setRemoteWarehouses([]);
       } finally {
@@ -287,7 +330,7 @@ export function ContactForm() {
     deliveryMethod,
     hasApiKey,
     localFilteredWarehouses.length,
-    activeDelivery.pointLabel,
+    activeDelivery?.pointLabel,
   ]);
 
   useEffect(() => {
@@ -304,7 +347,7 @@ export function ContactForm() {
   }, [warehouseOpen]);
 
   useEffect(() => {
-    if (cityLocked) return;
+    if (!deliveryMethod || cityLocked) return;
 
     const query = cityQuery.trim();
     if (!hasApiKey || query.length < 2) {
@@ -357,10 +400,17 @@ export function ContactForm() {
     }, 350);
 
     return () => window.clearTimeout(timer);
-  }, [cityQuery, hasApiKey, cityLocked, applyCitySelection, resetWarehouseSelection]);
+  }, [
+    cityQuery,
+    hasApiKey,
+    cityLocked,
+    deliveryMethod,
+    applyCitySelection,
+    resetWarehouseSelection,
+  ]);
 
   useEffect(() => {
-    if (!selectedCityRef || !hasApiKey) return;
+    if (!selectedCityRef || !hasApiKey || !deliveryMethod) return;
     if (warehousesCacheKey === warehouseCacheKey) return;
 
     void loadWarehousesForSelectedCity();
@@ -397,7 +447,7 @@ export function ContactForm() {
 
   const handleDeliveryMethodChange = (method: DeliveryMethod) => {
     setDeliveryMethod(method);
-    resetWarehouseSelection();
+    resetCitySelection();
     setNpError("");
   };
 
@@ -415,8 +465,14 @@ export function ContactForm() {
       setNpError("API-ключ Нової Пошти не налаштований.");
       return;
     }
+    if (!deliveryMethod) {
+      setNpError("Оберіть спосіб отримання: відділення або поштомат.");
+      return;
+    }
     if (!selectedCityRef || !selectedWarehouseRef) {
-      setNpError(`Оберіть місто та ${activeDelivery.pointLabel.toLowerCase()} для доставки.`);
+      setNpError(
+        `Оберіть місто та ${activeDelivery?.pointLabel.toLowerCase() ?? "відділення"} для доставки.`,
+      );
       return;
     }
     setSubmitted(true);
@@ -449,8 +505,8 @@ export function ContactForm() {
                 </div>
                 <h3 className="font-display text-2xl font-bold">Повідомлення надіслано!</h3>
                 <p className="mt-2 text-muted">
-                  Заявку на доставку ({activeDelivery.label}) отримано. Зв&apos;яжемось із вами
-                  найближчим часом.
+                  Заявку на доставку ({activeDelivery?.label ?? "Нова Пошта"}) отримано.
+                  Зв&apos;яжемось із вами найближчим часом.
                 </p>
               </motion.div>
             ) : (
@@ -541,159 +597,162 @@ export function ContactForm() {
                     </div>
                   </fieldset>
 
-                  <div className="relative">
-                    <label
-                      htmlFor="city"
-                      className="text-xs font-semibold uppercase tracking-wider text-muted"
-                    >
-                      Місто (Нова Пошта)
-                    </label>
-                    <input
-                      id="city"
-                      required
-                      autoComplete="off"
-                      value={cityQuery}
-                      onChange={(e) => handleCityInput(e.target.value)}
-                      onFocus={() => cities.length > 0 && setShowCityList(true)}
-                      disabled={!hasApiKey}
-                      className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink disabled:cursor-not-allowed disabled:opacity-60"
-                      placeholder="Почніть вводити місто (мін. 2 літери)..."
-                    />
-                    {loadingCities ? (
-                      <p className="mt-2 text-xs text-muted">Шукаємо міста...</p>
-                    ) : null}
-                    {showCityList && cities.length > 0 ? (
-                      <ul
-                        role="listbox"
-                        className="absolute left-0 right-0 top-full z-20 mt-1 max-h-52 overflow-y-auto rounded-2xl border border-ink/10 bg-card py-1 shadow-card"
+                  <FormStep show={showCityStep}>
+                    <div className="relative">
+                      <label
+                        htmlFor="city"
+                        className="text-xs font-semibold uppercase tracking-wider text-muted"
                       >
-                        {cities.map((city) => (
-                          <li key={city.ref}>
-                            <button
-                              type="button"
-                              role="option"
-                              onMouseDown={(e) => e.preventDefault()}
-                              onClick={() => handleCitySelect(city)}
-                              className={`w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent/40 ${
-                                selectedCityRef === city.ref ? "bg-accent/30 font-semibold" : ""
-                              }`}
-                            >
-                              {city.name}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                    {!loadingCities &&
-                    cityQuery.trim().length >= 2 &&
-                    cities.length === 0 &&
-                    hasApiKey ? (
-                      <p className="mt-2 text-xs text-muted">Місто не знайдено. Спробуйте інший запит.</p>
-                    ) : null}
-                    {selectedCityName ? (
-                      <p className="mt-2 text-xs text-muted">Обрано: {selectedCityName}</p>
-                    ) : (
-                      <p className="mt-2 text-xs text-muted">
-                        Оберіть місто зі списку — після цього завантажаться відділення.
-                      </p>
-                    )}
-                  </div>
+                        Місто
+                      </label>
+                      <input
+                        id="city"
+                        required={showCityStep}
+                        autoComplete="off"
+                        value={cityQuery}
+                        onChange={(e) => handleCityInput(e.target.value)}
+                        onFocus={() => cities.length > 0 && setShowCityList(true)}
+                        disabled={!hasApiKey}
+                        className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink disabled:cursor-not-allowed disabled:opacity-60"
+                        placeholder="Почніть вводити місто (мін. 2 літери)..."
+                      />
+                      {loadingCities ? (
+                        <p className="mt-2 text-xs text-muted">Шукаємо міста...</p>
+                      ) : null}
+                      {showCityList && cities.length > 0 ? (
+                        <ul
+                          role="listbox"
+                          className="absolute left-0 right-0 top-full z-20 mt-1 max-h-52 overflow-y-auto rounded-2xl border border-ink/10 bg-card py-1 shadow-card"
+                        >
+                          {cities.map((city) => (
+                            <li key={city.ref}>
+                              <button
+                                type="button"
+                                role="option"
+                                onMouseDown={(e) => e.preventDefault()}
+                                onClick={() => handleCitySelect(city)}
+                                className={`w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent/40 ${
+                                  selectedCityRef === city.ref ? "bg-accent/30 font-semibold" : ""
+                                }`}
+                              >
+                                {city.name}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                      {!loadingCities &&
+                      cityQuery.trim().length >= 2 &&
+                      cities.length === 0 &&
+                      hasApiKey ? (
+                        <p className="mt-2 text-xs text-muted">
+                          Місто не знайдено. Спробуйте інший запит.
+                        </p>
+                      ) : null}
+                      {selectedCityName ? (
+                        <p className="mt-2 text-xs text-muted">Обрано: {selectedCityName}</p>
+                      ) : (
+                        <p className="mt-2 text-xs text-muted">Оберіть місто зі списку.</p>
+                      )}
+                    </div>
+                  </FormStep>
 
-                  <div ref={warehouseFieldRef} className="relative">
-                    <label
-                      htmlFor="warehouse"
-                      className="text-xs font-semibold uppercase tracking-wider text-muted"
-                    >
-                      {activeDelivery.pointLabel}
-                    </label>
-                    <input
-                      id="warehouse"
-                      type="text"
-                      autoComplete="off"
-                      value={warehouseInput}
-                      onChange={(e) => handleWarehouseInput(e.target.value)}
-                      onFocus={openWarehouseDropdown}
-                      onClick={openWarehouseDropdown}
-                      disabled={!hasApiKey || !selectedCityRef}
-                      className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink disabled:cursor-not-allowed disabled:opacity-60"
-                      placeholder={
-                        selectedCityRef
-                          ? "Натисніть для списку або введіть номер..."
-                          : "Спочатку оберіть місто"
-                      }
-                    />
-                    {warehouseListBusy ? (
-                      <p className="mt-2 text-xs text-muted">
-                        {loadingWarehouses
-                          ? `Завантажуємо ${activeDelivery.pointLabel.toLowerCase()}...`
-                          : "Уточнюємо пошук..."}
-                      </p>
-                    ) : null}
-                    {warehouseOpen && selectedCityRef ? (
-                      <ul
-                        role="listbox"
-                        className="absolute left-0 right-0 top-full z-20 mt-1 max-h-52 overflow-y-auto rounded-2xl border border-ink/10 bg-card py-1 shadow-card"
+                  <FormStep show={showWarehouseStep}>
+                    <div ref={warehouseFieldRef} className="relative">
+                      <label
+                        htmlFor="warehouse"
+                        className="text-xs font-semibold uppercase tracking-wider text-muted"
                       >
-                        {warehouseListBusy && displayWarehouses.length === 0 ? (
-                          <li className="px-4 py-2.5 text-sm text-muted">Завантаження...</li>
-                        ) : null}
-                        {!warehouseListBusy &&
-                        displayWarehouses.length === 0 &&
-                        warehouseInput.trim().length > 0 ? (
-                          <li className="px-4 py-2.5 text-sm text-muted">
-                            {activeDelivery.pointLabel} не знайдено. Спробуйте інший номер.
-                          </li>
-                        ) : null}
-                        {!warehouseListBusy &&
-                        displayWarehouses.length === 0 &&
-                        warehouseInput.trim().length === 0 &&
-                        allWarehouses.length === 0 ? (
-                          <li className="px-4 py-2.5 text-sm text-muted">
-                            Немає {activeDelivery.pointLabel.toLowerCase()} у цьому місті.
-                          </li>
-                        ) : null}
-                        {displayWarehouses.map((warehouse) => (
-                          <li key={warehouse.ref}>
-                            <button
-                              type="button"
-                              role="option"
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                applyWarehouseSelection(warehouse);
-                              }}
-                              className={`w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent/40 ${
-                                selectedWarehouseRef === warehouse.ref
-                                  ? "bg-accent/30 font-semibold"
-                                  : ""
-                              }`}
-                            >
-                              {warehouse.name}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                    {selectedCityRef && !selectedWarehouseRef ? (
-                      <p className="mt-2 text-xs text-muted">
-                        Натисніть поле — з&apos;явиться список. Введіть номер, щоб звузити пошук.
-                      </p>
-                    ) : null}
-                  </div>
+                        {activeDelivery?.pointLabel}
+                      </label>
+                      <input
+                        id="warehouse"
+                        type="text"
+                        required={showWarehouseStep}
+                        autoComplete="off"
+                        value={warehouseInput}
+                        onChange={(e) => handleWarehouseInput(e.target.value)}
+                        onFocus={openWarehouseDropdown}
+                        onClick={openWarehouseDropdown}
+                        disabled={!hasApiKey}
+                        className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink disabled:cursor-not-allowed disabled:opacity-60"
+                        placeholder="Натисніть для списку або введіть номер..."
+                      />
+                      {warehouseListBusy ? (
+                        <p className="mt-2 text-xs text-muted">
+                          {loadingWarehouses
+                            ? `Завантажуємо ${activeDelivery?.pointLabel.toLowerCase()}...`
+                            : "Уточнюємо пошук..."}
+                        </p>
+                      ) : null}
+                      {warehouseOpen && selectedCityRef ? (
+                        <ul
+                          role="listbox"
+                          className="absolute left-0 right-0 top-full z-20 mt-1 max-h-52 overflow-y-auto rounded-2xl border border-ink/10 bg-card py-1 shadow-card"
+                        >
+                          {warehouseListBusy && displayWarehouses.length === 0 ? (
+                            <li className="px-4 py-2.5 text-sm text-muted">Завантаження...</li>
+                          ) : null}
+                          {!warehouseListBusy &&
+                          displayWarehouses.length === 0 &&
+                          warehouseInput.trim().length > 0 ? (
+                            <li className="px-4 py-2.5 text-sm text-muted">
+                              {activeDelivery?.pointLabel} не знайдено. Спробуйте інший номер.
+                            </li>
+                          ) : null}
+                          {!warehouseListBusy &&
+                          displayWarehouses.length === 0 &&
+                          warehouseInput.trim().length === 0 &&
+                          allWarehouses.length === 0 ? (
+                            <li className="px-4 py-2.5 text-sm text-muted">
+                              Немає {activeDelivery?.pointLabel.toLowerCase()} у цьому місті.
+                            </li>
+                          ) : null}
+                          {displayWarehouses.map((warehouse) => (
+                            <li key={warehouse.ref}>
+                              <button
+                                type="button"
+                                role="option"
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  applyWarehouseSelection(warehouse);
+                                }}
+                                className={`w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent/40 ${
+                                  selectedWarehouseRef === warehouse.ref
+                                    ? "bg-accent/30 font-semibold"
+                                    : ""
+                                }`}
+                              >
+                                {warehouse.name}
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                      {!selectedWarehouseRef ? (
+                        <p className="mt-2 text-xs text-muted">
+                          Натисніть поле — з&apos;явиться список. Введіть номер, щоб звузити пошук.
+                        </p>
+                      ) : null}
+                    </div>
+                  </FormStep>
 
-                  <div>
-                    <label
-                      htmlFor="comment"
-                      className="text-xs font-semibold uppercase tracking-wider text-muted"
-                    >
-                      Коментар до замовлення
-                    </label>
-                    <textarea
-                      id="comment"
-                      rows={3}
-                      className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink"
-                      placeholder="Наприклад: зручний час для дзвінка"
-                    />
-                  </div>
+                  <FormStep show={showCommentStep}>
+                    <div>
+                      <label
+                        htmlFor="comment"
+                        className="text-xs font-semibold uppercase tracking-wider text-muted"
+                      >
+                        Коментар до замовлення
+                      </label>
+                      <textarea
+                        id="comment"
+                        rows={3}
+                        className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink"
+                        placeholder="Наприклад: зручний час для дзвінка"
+                      />
+                    </div>
+                  </FormStep>
                 </div>
                 {npError ? <p className="mt-4 text-sm text-red-500">{npError}</p> : null}
 
