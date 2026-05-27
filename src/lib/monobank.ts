@@ -47,6 +47,7 @@ export async function createMonobankInvoice(
     body: JSON.stringify({
       amount: input.amountKopiykas,
       ccy: 980,
+      displayType: "iframe",
       merchantPaymInfo: {
         reference: input.reference,
         destination: input.destination,

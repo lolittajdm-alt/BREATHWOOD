@@ -12,7 +12,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { MonobankPaymentModal } from "@/components/ui/MonobankPaymentModal";
+import { MonobankPaymentEmbed } from "@/components/ui/MonobankPaymentEmbed";
 import { NovaPoshtaLogo } from "@/components/ui/NovaPoshtaLogo";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -140,8 +140,8 @@ export function ContactForm() {
   const [customerName, setCustomerName] = useState("");
   const [orderComment, setOrderComment] = useState("");
   const [paymentLoading, setPaymentLoading] = useState(false);
-  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [paymentPageUrl, setPaymentPageUrl] = useState("");
+  const [paymentEmbedActive, setPaymentEmbedActive] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [npError, setNpError] = useState("");
 
@@ -192,7 +192,7 @@ export function ContactForm() {
     setOrderComment("");
     resetCitySelection();
     setNpError("");
-    setPaymentModalOpen(false);
+    setPaymentEmbedActive(false);
     setPaymentPageUrl("");
     setPaymentSuccess(false);
   }, [showCheckout, resetCitySelection]);
@@ -498,12 +498,20 @@ export function ContactForm() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get("payment") === "success") {
-      setPaymentSuccess(true);
-      setSubmitted(true);
-      const cleanUrl = `${window.location.pathname}${window.location.hash}`;
-      window.history.replaceState({}, "", cleanUrl);
+    if (params.get("payment") !== "success") return;
+
+    const successUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+    if (window.self !== window.top) {
+      window.top!.location.href = successUrl;
+      return;
     }
+
+    setPaymentSuccess(true);
+    setSubmitted(true);
+    setPaymentEmbedActive(false);
+    setPaymentPageUrl("");
+    window.history.replaceState({}, "", `${window.location.pathname}${window.location.hash}`);
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -575,7 +583,14 @@ export function ContactForm() {
       });
 
       setPaymentPageUrl(invoice.pageUrl);
-      setPaymentModalOpen(true);
+      setPaymentEmbedActive(true);
+
+      window.setTimeout(() => {
+        document.getElementById("monobank-payment")?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 200);
     } catch (error) {
       const message = error instanceof Error ? error.message : undefined;
       setNpError(
@@ -910,22 +925,24 @@ export function ContactForm() {
                       />
                     </div>
 
-                    <div className="mt-8">
-                      <p className="mb-3 text-sm text-muted">
-                        Сума до сплати:{" "}
-                        <span className="font-semibold text-ink">
-                          {orderAmountUah.toLocaleString("uk-UA")} ₴
-                        </span>
-                      </p>
-                      <MagneticButton
-                        type="submit"
-                        disabled={paymentLoading || !hasMonobankToken}
-                        className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink py-4 text-sm font-semibold uppercase tracking-wider text-surface disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:px-10"
-                      >
-                        {paymentLoading ? "Відкриваємо оплату…" : "Сплатити"}
-                        <DoodleIcon type="arrow" className="h-4 w-4" />
-                      </MagneticButton>
-                    </div>
+                    {!paymentEmbedActive ? (
+                      <div className="mt-8">
+                        <p className="mb-3 text-sm text-muted">
+                          Сума до сплати:{" "}
+                          <span className="font-semibold text-ink">
+                            {orderAmountUah.toLocaleString("uk-UA")} ₴
+                          </span>
+                        </p>
+                        <MagneticButton
+                          type="submit"
+                          disabled={paymentLoading || !hasMonobankToken}
+                          className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink py-4 text-sm font-semibold uppercase tracking-wider text-surface disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:px-10"
+                        >
+                          {paymentLoading ? "Підготовка оплати…" : "Сплатити"}
+                          <DoodleIcon type="arrow" className="h-4 w-4" />
+                        </MagneticButton>
+                      </div>
+                    ) : null}
                   </FormStep>
                 </div>
                 {npError ? <p className="mt-4 text-sm text-red-500">{npError}</p> : null}
@@ -933,12 +950,16 @@ export function ContactForm() {
             )}
               </form>
 
-              <MonobankPaymentModal
-                open={paymentModalOpen}
-                pageUrl={paymentPageUrl}
-                amountUah={orderAmountUah}
-                onClose={() => setPaymentModalOpen(false)}
-              />
+              {paymentEmbedActive && paymentPageUrl ? (
+                <MonobankPaymentEmbed
+                  pageUrl={paymentPageUrl}
+                  amountUah={orderAmountUah}
+                  onClose={() => {
+                    setPaymentEmbedActive(false);
+                    setPaymentPageUrl("");
+                  }}
+                />
+              ) : null}
             </motion.div>
           )}
         </AnimatePresence>
