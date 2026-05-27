@@ -13,7 +13,7 @@ export function FruitFlavors() {
       className="section-shell relative -mt-4 w-full overflow-hidden pb-16 pt-8 md:-mt-10 md:pb-32 md:pt-12"
     >
       <span className="section-number absolute bottom-4 right-1 sm:bottom-8 sm:right-4 md:right-12">
-        04
+        05
       </span>
 
       <p

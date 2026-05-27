@@ -20,7 +20,7 @@ export function TableOfContent() {
       className="section-shell relative w-full overflow-hidden py-16 md:py-32"
     >
       <span className="section-number absolute bottom-4 right-1 sm:bottom-8 sm:right-4 md:right-12">
-        05
+        04
       </span>
 
       <p
