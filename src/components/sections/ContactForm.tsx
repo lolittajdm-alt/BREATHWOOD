@@ -174,9 +174,7 @@ export function ContactForm() {
         setWarehouses(mapped);
         setShowWarehouseList(mapped.length > 0);
 
-        if (mapped.length === 1) {
-          applyWarehouseSelection(mapped[0]);
-        } else if (mapped.length === 0) {
+        if (mapped.length === 0) {
           setNpError(
             `${activeDelivery.pointLabel} не знайдено. Спробуйте інший номер або адресу.`,
           );
@@ -201,7 +199,6 @@ export function ContactForm() {
     deliveryMethod,
     hasApiKey,
     warehouseLocked,
-    applyWarehouseSelection,
     activeDelivery.pointLabel,
   ]);
 
