@@ -24,6 +24,12 @@ import {
   type DeliveryMethod,
   type WarehouseApiItem,
 } from "@/lib/novaPoshta";
+import {
+  formatUaNationalPhone,
+  isUaPhoneComplete,
+  parseUaNationalPhoneDigits,
+  UA_PHONE_PREFIX,
+} from "@/lib/uaPhone";
 
 const NOVA_POSHTA_API_KEY = process.env.NEXT_PUBLIC_NOVA_POSHTA_API_KEY ?? "";
 const WAREHOUSE_LIST_LIMIT = 500;
@@ -87,6 +93,7 @@ export function ContactForm() {
   const [loadingCities, setLoadingCities] = useState(false);
   const [loadingWarehouses, setLoadingWarehouses] = useState(false);
   const [loadingRemoteSearch, setLoadingRemoteSearch] = useState(false);
+  const [phoneDigits, setPhoneDigits] = useState("");
   const [npError, setNpError] = useState("");
 
   const warehouseFieldRef = useRef<HTMLDivElement>(null);
@@ -394,8 +401,16 @@ export function ContactForm() {
     setNpError("");
   };
 
+  const handlePhoneChange = (value: string) => {
+    setPhoneDigits(parseUaNationalPhoneDigits(value));
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (!isUaPhoneComplete(phoneDigits)) {
+      setNpError("Введіть номер телефону: 9 цифр після +380 (без 0 на початку).");
+      return;
+    }
     if (!hasApiKey) {
       setNpError("API-ключ Нової Пошти не налаштований.");
       return;
@@ -464,18 +479,32 @@ export function ContactForm() {
                   </div>
                   <div>
                     <label
-                      htmlFor="phone"
+                      htmlFor="phone-national"
                       className="text-xs font-semibold uppercase tracking-wider text-muted"
                     >
                       Телефон
                     </label>
-                    <input
-                      id="phone"
-                      type="tel"
-                      required
-                      className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink max-sm:text-base"
-                      placeholder="+380 XX XXX XX XX"
-                    />
+                    <div className="mt-2 flex items-center gap-2 border-b border-ink/15 focus-within:border-ink">
+                      <span className="shrink-0 py-3 text-base font-medium text-ink">
+                        {UA_PHONE_PREFIX}
+                      </span>
+                      <input
+                        id="phone-national"
+                        name="phone"
+                        type="tel"
+                        inputMode="numeric"
+                        autoComplete="tel-national"
+                        required
+                        value={formatUaNationalPhone(phoneDigits)}
+                        onChange={(e) => handlePhoneChange(e.target.value)}
+                        className="min-w-0 flex-1 bg-transparent py-3 text-base outline-none max-sm:text-base"
+                        placeholder="50 123 45 67"
+                        aria-describedby="phone-hint"
+                      />
+                    </div>
+                    <p id="phone-hint" className="mt-2 text-xs text-muted">
+                      Вводьте номер без 0 на початку — префікс {UA_PHONE_PREFIX} додається автоматично.
+                    </p>
                   </div>
 
                   <fieldset disabled={!hasApiKey}>
