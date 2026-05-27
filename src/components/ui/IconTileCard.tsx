@@ -20,8 +20,8 @@ export function IconTileCard({
 }: IconTileCardProps) {
   return (
     <motion.div
-      whileHover={{ scale: 1.03 }}
-      transition={{ duration: 0.35 }}
+      whileHover={{ y: -8, rotate: -0.35, scale: 1.03 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       aria-label={ariaLabel}
       className={`device-card cell-glass group flex flex-col items-center justify-between transition-shadow duration-300 ${
         selected ? "ring-2 ring-ink/30 ring-offset-2 ring-offset-surface" : ""

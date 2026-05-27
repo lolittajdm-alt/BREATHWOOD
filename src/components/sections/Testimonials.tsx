@@ -12,8 +12,8 @@ type Testimonial = (typeof testimonials)[number];
 function TestimonialCard({ item }: { item: Testimonial }) {
   return (
     <motion.div
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.35 }}
+      whileHover={{ y: -6, rotate: -0.25, scale: 1.02 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="testimonial-card cell-glass flex h-[260px] flex-col rounded-[1.5rem] p-5 sm:h-[300px] sm:rounded-[2rem] sm:p-6"
     >
       <div className="mb-3 flex h-5 shrink-0 items-center gap-0.5 sm:mb-4 sm:h-6 sm:gap-1" aria-label="5 зірок">
