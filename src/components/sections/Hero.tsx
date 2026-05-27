@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { Reveal } from "@/components/ui/Reveal";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { portfolioItems } from "@/data/content";
 
 export function Hero() {
@@ -108,48 +109,50 @@ export function Hero() {
         <div className="masonry-grid">
           {portfolioItems.map((item, i) => (
             <Reveal key={item.id} delay={i * 0.08}>
-              <motion.div
-                className="masonry-item cell-glass group relative overflow-hidden rounded-[2rem]"
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className="relative overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    width={800}
-                    height={item.tall ? 1000 : 600}
-                    className={`w-full object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 ${item.tall ? "aspect-[3/4]" : "aspect-[4/3]"}`}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-80 transition-opacity duration-400 sm:opacity-0 sm:group-hover:opacity-100" />
-                </div>
-
+              <TiltCard className="masonry-item h-full">
                 <motion.div
-                  initial={{ y: 10, opacity: 0 }}
-                  whileHover={{ y: 0, opacity: 1 }}
-                  className="absolute bottom-3 left-3 right-3 flex items-end justify-between opacity-100 sm:bottom-4 sm:left-4 sm:right-4 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100"
+                  className="cell-glass group relative overflow-hidden rounded-[2rem]"
+                  whileHover={{ y: -6, scale: 1.02 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <div>
-                    <span className="inline-block rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-wider text-ink">
-                      {item.category}
-                    </span>
-                    <h3 className="mt-2 font-display text-lg font-bold text-white md:text-xl">
-                      {item.title}
-                    </h3>
+                  <div className="relative overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      width={800}
+                      height={item.tall ? 1000 : 600}
+                      className={`w-full object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 ${item.tall ? "aspect-[3/4]" : "aspect-[4/3]"}`}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-80 transition-opacity duration-400 sm:opacity-0 sm:group-hover:opacity-100" />
                   </div>
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="white"
-                      strokeWidth="2"
-                      className="h-4 w-4"
-                    >
-                      <path d="M7 17L17 7M17 7H7M17 7v10" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
+
+                  <motion.div
+                    initial={{ y: 10, opacity: 0 }}
+                    whileHover={{ y: 0, opacity: 1 }}
+                    className="absolute bottom-3 left-3 right-3 flex items-end justify-between opacity-100 sm:bottom-4 sm:left-4 sm:right-4 sm:opacity-0 sm:transition-opacity sm:duration-300 sm:group-hover:opacity-100"
+                  >
+                    <div>
+                      <span className="inline-block rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-wider text-ink">
+                        {item.category}
+                      </span>
+                      <h3 className="mt-2 font-display text-lg font-bold text-white md:text-xl">
+                        {item.title}
+                      </h3>
+                    </div>
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="white"
+                        strokeWidth="2"
+                        className="h-4 w-4"
+                      >
+                        <path d="M7 17L17 7M17 7H7M17 7v10" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  </motion.div>
                 </motion.div>
-              </motion.div>
+              </TiltCard>
             </Reveal>
           ))}
         </div>
