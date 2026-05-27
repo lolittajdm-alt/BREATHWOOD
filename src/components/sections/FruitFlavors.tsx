@@ -6,7 +6,6 @@ import { FlavorTileCard } from "@/components/ui/FlavorTileCard";
 import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { TiltCard } from "@/components/ui/TiltCard";
 import { fruitFlavors } from "@/data/content";
 
 export function FruitFlavors() {
@@ -58,25 +57,19 @@ export function FruitFlavors() {
           <SectionHeading line1="ФРУКТОВІ" line2="СМАКИ" />
         </Reveal>
 
-        <p className="mt-4 text-sm text-muted sm:mt-6">
-          Можна обрати кілька смаків
-        </p>
+        <p className="mt-4 text-sm text-muted sm:mt-6">Можна обрати кілька смаків</p>
 
-        <HorizontalScrollStrip ariaLabel="Фруктові смаки" className="mt-8 lg:hidden" showHint={selectedCount === 0}>
+        <HorizontalScrollStrip
+          ariaLabel="Фруктові смаки"
+          className="mt-8 lg:mt-12"
+          showHint={selectedCount === 0}
+        >
           {fruitFlavors.map((flavor) => (
-            <StripItem key={flavor.id} columns={2}>
+            <StripItem key={flavor.id} columns={3}>
               {renderFlavorCard(flavor)}
             </StripItem>
           ))}
         </HorizontalScrollStrip>
-
-        <div className="mt-8 hidden grid-cols-3 gap-6 lg:mt-12 lg:grid">
-          {fruitFlavors.map((flavor, i) => (
-            <Reveal key={flavor.id} delay={i * 0.05}>
-              <TiltCard className="h-full">{renderFlavorCard(flavor)}</TiltCard>
-            </Reveal>
-          ))}
-        </div>
 
         <AnimatePresence>
           {selectedCount > 0 ? (

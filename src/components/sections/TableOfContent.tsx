@@ -4,7 +4,6 @@ import { DeviceTileCard } from "@/components/ui/DeviceTileCard";
 import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { TiltCard } from "@/components/ui/TiltCard";
 import { tocCards } from "@/data/content";
 
 export function TableOfContent() {
@@ -29,23 +28,13 @@ export function TableOfContent() {
           <SectionHeading line1="НАШІ" line2="ПРИСТРОЇ" />
         </Reveal>
 
-        <HorizontalScrollStrip ariaLabel="Пристрої" className="mt-10 lg:hidden">
+        <HorizontalScrollStrip ariaLabel="Пристрої" className="mt-10 lg:mt-16">
           {tocCards.map((card) => (
             <StripItem key={card.id} columns={2}>
               <DeviceTileCard title={card.title} icon={card.icon} />
             </StripItem>
           ))}
         </HorizontalScrollStrip>
-
-        <div className="mt-10 hidden grid-cols-4 gap-6 lg:mt-16 lg:grid">
-          {tocCards.map((card, i) => (
-            <Reveal key={card.id} delay={i * 0.1}>
-              <TiltCard className="h-full">
-                <DeviceTileCard title={card.title} icon={card.icon} />
-              </TiltCard>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   );

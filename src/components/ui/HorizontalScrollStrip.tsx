@@ -58,7 +58,7 @@ export function HorizontalScrollStrip({
           role="region"
           aria-label={ariaLabel}
           tabIndex={0}
-          className="card-strip -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-visible overscroll-x-contain scroll-smooth px-4 py-3 touch-pan-x sm:-mx-6 sm:gap-4 sm:px-6 sm:py-4 md:mx-0 md:px-0"
+          className="card-strip -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-visible overscroll-x-contain scroll-smooth px-4 py-3 touch-pan-x sm:-mx-6 sm:gap-4 sm:px-6 sm:py-4 lg:gap-5 lg:py-5"
           onKeyDown={(e) => {
             if (e.key === "ArrowLeft") {
               e.preventDefault();

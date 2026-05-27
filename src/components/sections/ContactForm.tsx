@@ -17,103 +17,114 @@ export function ContactForm() {
 
   return (
     <section id="contact" className="section-shell relative py-12 md:py-32">
-      <span className="section-number absolute top-4 left-1/2 -translate-x-1/2 sm:top-8">07</span>
+      <span className="section-number absolute top-6 right-2 sm:top-10 sm:right-4 md:right-12">
+        07
+      </span>
 
       <div className="section-container">
-        <div className="contact-layout grid gap-16 lg:grid-cols-2">
-          <div>
-            <Reveal>
-              <SectionHeading line1="ДАВАЙ ПОЗНАЙОМИМОСЬ" line2="БЛИЖЧЕ" />
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">
-                Є ідея або проєкт? Напиши — і створимо щось справді особливе разом.
-              </p>
-            </Reveal>
+        <Reveal>
+          <SectionHeading line1="ДАВАЙ ПОЗНАЙОМИМОСЬ" line2="БЛИЖЧЕ" />
+        </Reveal>
 
-            <Reveal delay={0.2}>
-              <div className="mt-10 space-y-4">
-                {["hello@portofolio.design", "Київ, Україна", "Доступний для фрилансу"].map(
-                  (item) => (
-                    <p key={item} className="flex items-center gap-3 text-sm">
-                      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                      {item}
-                    </p>
-                  )
-                )}
-              </div>
-            </Reveal>
+        <Reveal delay={0.1}>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">
+            Є ідея або проєкт? Напиши — і створимо щось справді особливе разом.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.15}>
+          <div className="mt-8 max-w-xl space-y-3 sm:mt-10">
+            {["hello@portofolio.design", "Київ, Україна", "Доступний для фрилансу"].map(
+              (item) => (
+                <p key={item} className="flex items-center gap-3 text-sm">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
+                  {item}
+                </p>
+              )
+            )}
           </div>
+        </Reveal>
 
-          <Reveal direction="right" delay={0.15}>
-            <form
-              onSubmit={handleSubmit}
-              className="glass rounded-xl p-5 sm:rounded-[2rem] sm:p-8 md:p-10"
-            >
-              {submitted ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center py-12 text-center"
-                >
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent">
-                    <DoodleIcon type="star" className="h-8 w-8" />
+        <Reveal delay={0.2}>
+          <form
+            onSubmit={handleSubmit}
+            className="glass mt-12 w-full max-w-2xl rounded-xl p-5 sm:mt-14 sm:rounded-[2rem] sm:p-8 md:mt-16 md:p-10 lg:mt-20"
+          >
+            {submitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center py-12 text-center"
+              >
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent">
+                  <DoodleIcon type="star" className="h-8 w-8" />
+                </div>
+                <h3 className="font-display text-2xl font-bold">Повідомлення надіслано!</h3>
+                <p className="mt-2 text-muted">Відповім протягом 24 годин.</p>
+              </motion.div>
+            ) : (
+              <>
+                <div className="space-y-6">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="text-xs font-semibold uppercase tracking-wider text-muted"
+                    >
+                      Ім’я
+                    </label>
+                    <input
+                      id="name"
+                      type="text"
+                      required
+                      className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink max-sm:text-base"
+                      placeholder="Ваше ім’я"
+                    />
                   </div>
-                  <h3 className="font-display text-2xl font-bold">Повідомлення надіслано!</h3>
-                  <p className="mt-2 text-muted">Відповім протягом 24 годин.</p>
-                </motion.div>
-              ) : (
-                <>
-                  <div className="space-y-6">
-                    <div>
-                      <label htmlFor="name" className="text-xs font-semibold uppercase tracking-wider text-muted">
-                        Ім’я
-                      </label>
-                      <input
-                        id="name"
-                        type="text"
-                        required
-                        className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink max-sm:text-base"
-                        placeholder="Ваше ім’я"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted">
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        type="email"
-                        required
-                        className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink max-sm:text-base"
-                        placeholder="you@email.com"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="message" className="text-xs font-semibold uppercase tracking-wider text-muted">
-                        Повідомлення
-                      </label>
-                      <textarea
-                        id="message"
-                        required
-                        rows={4}
-                        className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink"
-                        placeholder="Розкажіть про ваш проєкт..."
-                      />
-                    </div>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="text-xs font-semibold uppercase tracking-wider text-muted"
+                    >
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      required
+                      className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink max-sm:text-base"
+                      placeholder="you@email.com"
+                    />
                   </div>
+                  <div>
+                    <label
+                      htmlFor="message"
+                      className="text-xs font-semibold uppercase tracking-wider text-muted"
+                    >
+                      Повідомлення
+                    </label>
+                    <textarea
+                      id="message"
+                      required
+                      rows={4}
+                      className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink"
+                      placeholder="Розкажіть про ваш проєкт..."
+                    />
+                  </div>
+                </div>
 
-                  <div className="mt-8">
-                    <MagneticButton type="submit" className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink py-4 text-sm font-semibold uppercase tracking-wider text-surface sm:w-auto sm:px-10">
-                      Надіслати
-                      <DoodleIcon type="arrow" className="h-4 w-4" />
-                    </MagneticButton>
-                  </div>
-                </>
-              )}
-            </form>
-          </Reveal>
-        </div>
+                <div className="mt-8">
+                  <MagneticButton
+                    type="submit"
+                    className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink py-4 text-sm font-semibold uppercase tracking-wider text-surface sm:w-auto sm:px-10"
+                  >
+                    Надіслати
+                    <DoodleIcon type="arrow" className="h-4 w-4" />
+                  </MagneticButton>
+                </div>
+              </>
+            )}
+          </form>
+        </Reveal>
 
         <Reveal delay={0.25}>
           <div className="contact-footer mt-20 grid gap-6 border-t border-border pt-16 sm:grid-cols-[1fr_auto]">
@@ -151,7 +162,7 @@ export function ContactForm() {
               </ul>
             </div>
 
-            <div className="mx-auto flex aspect-square w-full max-w-[10rem] items-center justify-center rounded-3xl bg-accent p-6 sm:mx-0 sm:max-w-none sm:w-40">
+            <div className="mx-auto flex aspect-square w-full max-w-[10rem] items-center justify-center rounded-3xl bg-accent p-6 sm:mx-0 sm:w-40 sm:max-w-none">
               <div className="grid grid-cols-5 gap-1">
                 {Array.from({ length: 25 }).map((_, i) => (
                   <div
