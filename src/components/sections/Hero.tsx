@@ -116,14 +116,28 @@ export function Hero() {
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="relative overflow-hidden">
-                    <img
-                      src={assetPath(item.image)}
-                      alt={item.title}
-                      className={`w-full object-cover object-center grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 ${item.tall ? "aspect-[3/4]" : "aspect-[4/3]"}`}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-80 transition-opacity duration-400 sm:opacity-0 sm:group-hover:opacity-100" />
+                    {item.image ? (
+                      <img
+                        src={assetPath(item.image)}
+                        alt={item.title}
+                        className={`w-full object-cover object-center transition-all duration-500 group-hover:scale-105 ${
+                          item.tall
+                            ? "aspect-[3/4] lg:aspect-[1124/1613]"
+                            : "aspect-[4/3]"
+                        }`}
+                      />
+                    ) : (
+                      <div
+                        className={`w-full bg-card/40 ${item.tall ? "aspect-[3/4] lg:aspect-[1124/1613]" : "aspect-[4/3]"}`}
+                        aria-hidden="true"
+                      />
+                    )}
+                    {item.image ? (
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-80 transition-opacity duration-400 sm:opacity-0 sm:group-hover:opacity-100" />
+                    ) : null}
                   </div>
 
+                  {item.image ? (
                   <motion.div
                     initial={{ y: 10, opacity: 0 }}
                     whileHover={{ y: 0, opacity: 1 }}
@@ -149,6 +163,7 @@ export function Hero() {
                       </svg>
                     </div>
                   </motion.div>
+                  ) : null}
                 </motion.div>
               </TiltCard>
             </Reveal>

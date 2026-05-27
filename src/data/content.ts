@@ -1,58 +1,60 @@
+const heroImage = "images/hero/Firefly (1).jpg";
+
 export const portfolioItems = [
   {
     id: 1,
     title: "Неонова айдентика бренду",
     category: "Графічний дизайн",
-    image: "images/hero/Firefly (1).jpg",
+    image: heroImage,
     tall: true,
   },
   {
     id: 2,
     title: "Серія міських портретів",
     category: "Фотографія",
-    image: "images/hero/Firefly (1).jpg",
+    image: null,
     tall: false,
   },
   {
     id: 3,
     title: "Редакційний макет",
     category: "Графічний дизайн",
-    image: "images/hero/Firefly (1).jpg",
+    image: null,
     tall: false,
   },
   {
     id: 4,
     title: "Вуличний рух",
     category: "Відеозйомка",
-    image: "https://images.unsplash.com/photo-1478720568477-152d9b164e63?w=800&q=80",
+    image: heroImage,
     tall: true,
   },
   {
     id: 5,
     title: "Мінімалістичні постери",
     category: "Графічний дизайн",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80",
+    image: null,
     tall: false,
   },
   {
     id: 6,
     title: "Золота година",
     category: "Фотографія",
-    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80",
+    image: null,
     tall: false,
   },
   {
     id: 7,
     title: "Продуктова кампанія",
     category: "Монтаж фото та відео",
-    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80",
+    image: heroImage,
     tall: true,
   },
   {
     id: 8,
     title: "Типографічні експерименти",
     category: "Графічний дизайн",
-    image: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=600&q=80",
+    image: null,
     tall: false,
   },
 ];
