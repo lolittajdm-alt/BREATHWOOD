@@ -5,6 +5,7 @@ import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { testimonials } from "@/data/content";
 
 type Testimonial = (typeof testimonials)[number];
@@ -48,7 +49,9 @@ export function Testimonials() {
         <HorizontalScrollStrip ariaLabel="Відгуки клієнтів" className="mt-8 sm:mt-12">
           {testimonials.map((item) => (
             <StripItem key={item.id} columns={2}>
-              <TestimonialCard item={item} />
+              <TiltCard className="h-full">
+                <TestimonialCard item={item} />
+              </TiltCard>
             </StripItem>
           ))}
         </HorizontalScrollStrip>
