@@ -109,7 +109,7 @@ export function Hero() {
           {portfolioItems.map((item, i) => (
             <Reveal key={item.id} delay={i * 0.08}>
               <motion.div
-                className="masonry-item group relative overflow-hidden rounded-[2rem]"
+                className="masonry-item cell-glass group relative overflow-hidden rounded-[2rem]"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.4 }}
               >

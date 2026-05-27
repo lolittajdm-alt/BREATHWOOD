@@ -37,7 +37,7 @@ export function HorizontalScrollStrip({
             type="button"
             onClick={() => scrollByStep(-1)}
             aria-label={`${ariaLabel}: попередні`}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card transition-colors active:bg-accent sm:h-10 sm:w-10 sm:hover:border-ink/30 sm:hover:bg-accent"
+            className="cell-glass flex h-9 w-9 items-center justify-center rounded-full transition-colors active:bg-accent sm:h-10 sm:w-10 sm:hover:opacity-90"
           >
             <DoodleIcon type="arrow" className="h-4 w-4 rotate-180" />
           </button>
@@ -45,7 +45,7 @@ export function HorizontalScrollStrip({
             type="button"
             onClick={() => scrollByStep(1)}
             aria-label={`${ariaLabel}: наступні`}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card transition-colors active:bg-accent sm:h-10 sm:w-10 sm:hover:border-ink/30 sm:hover:bg-accent"
+            className="cell-glass flex h-9 w-9 items-center justify-center rounded-full transition-colors active:bg-accent sm:h-10 sm:w-10 sm:hover:opacity-90"
           >
             <DoodleIcon type="arrow" className="h-4 w-4" />
           </button>

@@ -27,7 +27,7 @@ export function ContactForm() {
         <Reveal delay={0.1}>
           <form
             onSubmit={handleSubmit}
-            className="glass mt-6 w-full rounded-xl p-5 sm:mt-8 sm:rounded-[2rem] sm:p-8 md:p-10"
+            className="cell-glass mt-6 w-full rounded-xl p-5 sm:mt-8 sm:rounded-[2rem] sm:p-8 md:p-10"
           >
             {submitted ? (
               <motion.div
@@ -107,7 +107,7 @@ export function ContactForm() {
 
         <Reveal delay={0.25}>
           <div className="contact-footer mt-20 grid gap-6 border-t border-border pt-16 sm:grid-cols-[1fr_auto]">
-            <div className="glass rounded-3xl p-6 md:p-8">
+            <div className="cell-glass rounded-3xl p-6 md:p-8">
               <h3 className="font-display text-2xl font-bold md:text-3xl">Контакти</h3>
               <ul className="mt-6 space-y-3 text-sm md:text-base">
                 <li>

@@ -23,11 +23,9 @@ export function IconTileCard({
       whileHover={{ scale: 1.03 }}
       transition={{ duration: 0.35 }}
       aria-label={ariaLabel}
-      className={`device-card group flex flex-col items-center justify-between border shadow-card transition-shadow duration-300 ${
-        selected
-          ? "border-ink ring-2 ring-ink/30 ring-offset-2 ring-offset-surface"
-          : "border-border/40"
-      } bg-accent ${className}`}
+      className={`device-card cell-glass group flex flex-col items-center justify-between transition-shadow duration-300 ${
+        selected ? "ring-2 ring-ink/30 ring-offset-2 ring-offset-surface" : ""
+      } ${className}`}
     >
       <div className="flex flex-1 items-center justify-center">{children}</div>
       {footer}

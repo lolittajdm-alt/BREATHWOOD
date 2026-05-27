@@ -23,6 +23,7 @@ export function DeviceTileCard({ title, icon }: DeviceTileCardProps) {
   return (
     <IconTileCard
       ariaLabel={title}
+      className="!bg-accent"
       footer={
         <TileActionButton
           href={isOpen ? "#flavors" : undefined}
