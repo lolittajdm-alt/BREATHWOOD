@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState, FormEvent } from "react";
 import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { NovaPoshtaLogo } from "@/components/ui/NovaPoshtaLogo";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import {
@@ -314,38 +315,39 @@ export function ContactForm() {
                     />
                   </div>
 
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted">
+                  <fieldset disabled={!hasApiKey}>
+                    <legend className="text-xs font-semibold uppercase tracking-wider text-muted">
                       Спосіб отримання
-                    </p>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    </legend>
+                    <div className="mt-3 space-y-3">
                       {deliveryMethodOptions.map((option) => {
                         const selected = deliveryMethod === option.id;
                         return (
-                          <button
+                          <label
                             key={option.id}
-                            type="button"
-                            disabled={!hasApiKey}
-                            onClick={() => handleDeliveryMethodChange(option.id)}
-                            className={`rounded-2xl border px-4 py-3 text-left transition-all disabled:cursor-not-allowed disabled:opacity-60 ${
+                            className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 transition-all has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60 ${
                               selected
-                                ? "border-ink bg-ink text-surface shadow-soft"
+                                ? "border-ink bg-ink/5 shadow-soft"
                                 : "border-ink/15 bg-card/30 hover:border-ink/30"
                             }`}
                           >
-                            <span className="block font-display text-sm font-bold sm:text-base">
+                            <input
+                              type="radio"
+                              name="deliveryMethod"
+                              value={option.id}
+                              checked={selected}
+                              onChange={() => handleDeliveryMethodChange(option.id)}
+                              className="h-4 w-4 shrink-0 accent-ink"
+                            />
+                            <NovaPoshtaLogo className="h-9 w-9 shrink-0" />
+                            <span className="font-display text-sm font-bold sm:text-base">
                               {option.label}
                             </span>
-                            <span
-                              className={`mt-1 block text-xs ${selected ? "text-surface/80" : "text-muted"}`}
-                            >
-                              {option.description}
-                            </span>
-                          </button>
+                          </label>
                         );
                       })}
                     </div>
-                  </div>
+                  </fieldset>
 
                   <div className="relative">
                     <label

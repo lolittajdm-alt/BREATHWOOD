@@ -81,55 +81,74 @@ export function formatWarehouseLabel(item: WarehouseApiItem): string {
   return item.Description;
 }
 
+function filterWarehousesByMethod(
+  items: WarehouseApiItem[],
+  deliveryMethod: DeliveryMethod,
+  query: string,
+): WarehouseApiItem[] {
+  const category = deliveryMethod === "postomat" ? "Postomat" : "Branch";
+  let filtered = items.filter((item) => item.CategoryOfWarehouse === category);
+
+  if (!query) return filtered;
+
+  if (/^\d+$/.test(query)) {
+    return filtered.filter(
+      (item) =>
+        item.Number === query ||
+        item.Description.includes(`№${query}`) ||
+        item.Description.includes(`№${query}:`),
+    );
+  }
+
+  const normalized = query.toLowerCase();
+  return filtered.filter((item) => item.Description.toLowerCase().includes(normalized));
+}
+
 export async function searchWarehouses(
   apiKey: string,
   cityRef: string,
   deliveryMethod: DeliveryMethod,
   findByString: string,
 ): Promise<WarehouseApiItem[]> {
-  const typeRef =
-    deliveryMethod === "postomat" ? NP_WAREHOUSE_POSTOMAT_REF : NP_WAREHOUSE_BRANCH_REF;
   const query = findByString.trim();
 
-  const json = await callNovaPoshta<WarehouseApiItem[]>(
-    apiKey,
-    "AddressGeneral",
-    "getWarehouses",
-    {
-      CityRef: cityRef,
-      TypeOfWarehouseRef: typeRef,
-      FindByString: query,
-      Limit: 30,
-    },
-  );
-
-  if (json.success && json.data?.length) {
-    return json.data;
-  }
-
-  if (!json.success) {
-    throw new Error(formatNovaPoshtaError(json.errors) ?? "Nova Poshta warehouse search failed");
-  }
-
-  const fallback = await callNovaPoshta<WarehouseApiItem[]>(
-    apiKey,
-    "AddressGeneral",
-    "getWarehouses",
-    {
-      CityRef: cityRef,
-      FindByString: query,
-      Limit: 30,
-    },
-  );
-
-  if (!fallback.success) {
-    throw new Error(
-      formatNovaPoshtaError(fallback.errors) ?? "Nova Poshta warehouse search failed",
+  if (query.length >= 1) {
+    const search = await callNovaPoshta<WarehouseApiItem[]>(
+      apiKey,
+      "AddressGeneral",
+      "getWarehouses",
+      {
+        CityRef: cityRef,
+        FindByString: query,
+        Limit: 50,
+      },
     );
+
+    if (!search.success) {
+      throw new Error(
+        formatNovaPoshtaError(search.errors) ?? "Nova Poshta warehouse search failed",
+      );
+    }
+
+    const fromSearch = filterWarehousesByMethod(search.data ?? [], deliveryMethod, query);
+    if (fromSearch.length) return fromSearch;
   }
 
-  const category = deliveryMethod === "postomat" ? "Postomat" : "Branch";
-  return (fallback.data ?? []).filter((item) => item.CategoryOfWarehouse === category);
+  const all = await callNovaPoshta<WarehouseApiItem[]>(
+    apiKey,
+    "AddressGeneral",
+    "getWarehouses",
+    {
+      CityRef: cityRef,
+      Limit: 500,
+    },
+  );
+
+  if (!all.success) {
+    throw new Error(formatNovaPoshtaError(all.errors) ?? "Nova Poshta warehouse search failed");
+  }
+
+  return filterWarehousesByMethod(all.data ?? [], deliveryMethod, query);
 }
 
 export async function fetchWarehousesForCity(
