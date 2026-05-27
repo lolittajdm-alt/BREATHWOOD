@@ -31,12 +31,28 @@ export const deliveryMethodOptions: {
   },
 ];
 
+export type NovaPoshtaResponse<T> = {
+  success: boolean;
+  data: T;
+  errors?: unknown[];
+};
+
+export function formatNovaPoshtaError(errors?: unknown[]): string | undefined {
+  if (!errors?.length) return undefined;
+  const first = errors[0];
+  if (typeof first === "string") return first;
+  if (typeof first === "object" && first && "message" in first) {
+    return String((first as { message: string }).message);
+  }
+  return undefined;
+}
+
 export async function callNovaPoshta<T>(
   apiKey: string,
   modelName: string,
   calledMethod: string,
   methodProperties: Record<string, unknown>,
-): Promise<{ success: boolean; data: T; errors?: unknown[] }> {
+): Promise<NovaPoshtaResponse<T>> {
   const response = await fetch(NOVA_POSHTA_API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -49,4 +65,53 @@ export async function callNovaPoshta<T>(
   });
 
   return response.json();
+}
+
+type WarehouseApiItem = {
+  Ref: string;
+  Description: string;
+  CategoryOfWarehouse?: string;
+};
+
+export async function fetchWarehousesForCity(
+  apiKey: string,
+  cityRef: string,
+  deliveryMethod: DeliveryMethod,
+): Promise<WarehouseApiItem[]> {
+  const typeRef =
+    deliveryMethod === "postomat" ? NP_WAREHOUSE_POSTOMAT_REF : NP_WAREHOUSE_BRANCH_REF;
+
+  const json = await callNovaPoshta<WarehouseApiItem[]>(
+    apiKey,
+    "AddressGeneral",
+    "getWarehouses",
+    {
+      CityRef: cityRef,
+      TypeOfWarehouseRef: typeRef,
+      Limit: 500,
+    },
+  );
+
+  if (json.success && json.data?.length) {
+    return json.data;
+  }
+
+  const fallback = await callNovaPoshta<WarehouseApiItem[]>(
+    apiKey,
+    "AddressGeneral",
+    "getWarehouses",
+    {
+      CityRef: cityRef,
+      Limit: 500,
+    },
+  );
+
+  if (!fallback.success) {
+    throw new Error(
+      formatNovaPoshtaError(fallback.errors) ?? "Nova Poshta warehouses request failed",
+    );
+  }
+
+  const category = deliveryMethod === "postomat" ? "Postomat" : "Branch";
+  return (fallback.data ?? []).filter((item) => item.CategoryOfWarehouse === category);
 }
