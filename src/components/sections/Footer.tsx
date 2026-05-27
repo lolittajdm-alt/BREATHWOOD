@@ -1,19 +1,34 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { DoodleIcon } from "@/components/ui/DoodleIcon";
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { useOrderFlow } from "@/context/OrderFlowContext";
 
 const links = [
-  { label: "Про мене", href: "#about" },
-  { label: "Смаки", href: "#flavors" },
-  { label: "Замовити", href: "#services" },
-  { label: "Контакти", href: "#contact" },
+  { label: "Про продукт", href: "#about", sectionId: "about" },
+  { label: "Замовити", href: "#services", sectionId: "services" },
+  { label: "Смаки", href: "#flavors", sectionId: "flavors" },
+  { label: "Контакти", href: "#contact", sectionId: "contact" },
 ];
 
 export function Footer() {
+  const { isOpen, openOrderFlow } = useOrderFlow();
+
+  const handleNavClick = (sectionId: string) => {
+    if (sectionId === "about") {
+      document.getElementById("about")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    if (!isOpen) {
+      openOrderFlow(sectionId);
+      return;
+    }
+
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <footer className="section-shell relative border-t border-border py-10 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:py-16">
+    <footer className="section-shell relative border-t border-border py-10 pb-[max(5rem,env(safe-area-inset-bottom))] md:py-16 md:pb-[max(6rem,env(safe-area-inset-bottom))]">
       <div className="section-container">
         <div className="footer-layout flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
           <div>
@@ -36,19 +51,16 @@ export function Footer() {
               <a
                 key={link.label}
                 href={link.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavClick(link.sectionId);
+                }}
                 className="animated-underline py-1 text-xs font-medium uppercase tracking-wider sm:text-sm"
               >
                 {link.label}
               </a>
             ))}
           </nav>
-
-          <MagneticButton
-            href="#hero"
-            className="flex h-12 w-12 shrink-0 items-center justify-center self-start rounded-full border border-border bg-card transition-colors active:bg-accent sm:h-14 sm:w-14 sm:self-auto sm:hover:bg-accent"
-          >
-            <DoodleIcon type="arrow" className="h-5 w-5 -rotate-90" />
-          </MagneticButton>
         </div>
 
         <div className="mt-10 flex items-center justify-center gap-3 sm:mt-16 sm:gap-4">

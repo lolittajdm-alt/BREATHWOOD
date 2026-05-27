@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
+import { ScrollToTopOnLoad } from "@/components/ui/ScrollToTopOnLoad";
 import { GrainOverlay } from "@/components/ui/GrainOverlay";
 import { FloatingShapes } from "@/components/layout/FloatingShapes";
 
@@ -38,7 +40,9 @@ export default function RootLayout({
   return (
     <html lang="uk" className={`${display.variable} ${body.variable}`}>
       <body>
+        <ScrollToTopOnLoad />
         <ScrollProgress />
+        <ScrollToTop />
         <GrainOverlay />
         <FloatingShapes />
         {children}

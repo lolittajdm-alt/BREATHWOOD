@@ -3,6 +3,7 @@
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { IconTileCard } from "@/components/ui/IconTileCard";
 import { TileActionButton } from "@/components/ui/TileActionButton";
+import { useOrderFlow } from "@/context/OrderFlowContext";
 
 const iconMap = {
   design: "design" as const,
@@ -17,10 +18,24 @@ type DeviceTileCardProps = {
 };
 
 export function DeviceTileCard({ title, icon }: DeviceTileCardProps) {
+  const { isOpen, openOrderFlow } = useOrderFlow();
+
   return (
     <IconTileCard
       ariaLabel={title}
-      footer={<TileActionButton href="#flavors">Купити</TileActionButton>}
+      footer={
+        <TileActionButton
+          href={isOpen ? "#flavors" : undefined}
+          onClick={(e) => {
+            if (!isOpen) {
+              e.preventDefault();
+              openOrderFlow("flavors");
+            }
+          }}
+        >
+          Купити
+        </TileActionButton>
+      }
     >
       <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-ink/10 transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20 sm:rounded-2xl">
         <DoodleIcon

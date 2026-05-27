@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
-import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { orderSteps } from "@/data/content";
@@ -25,15 +24,6 @@ export function Services() {
                 Чотири прості кроки — і BREATH WOOD буде у вас. Оформлення займає лише кілька
                 хвилин.
               </p>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <MagneticButton
-                href="#contact"
-                className="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink px-8 py-4 text-sm font-semibold uppercase tracking-wider text-surface sm:mt-10 sm:w-auto"
-              >
-                Замовити
-                <DoodleIcon type="arrow" className="h-4 w-4" />
-              </MagneticButton>
             </Reveal>
           </div>
 
