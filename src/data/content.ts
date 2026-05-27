@@ -124,9 +124,9 @@ export const testimonials = [
 ];
 
 export const orderSteps = [
-  { id: 1, title: "Обери пристрій" },
-  { id: 2, title: "Визначись із смаками" },
-  { id: 3, title: "Надай інформацію про себе" },
+  { id: 1, title: "Обери пристрій", href: "#toc" },
+  { id: 2, title: "Визначись із смаками", href: "#flavors" },
+  { id: 3, title: "Надай інформацію про себе", href: "#contact" },
   { id: 4, title: "Отримуй на відділенні" },
 ];
 

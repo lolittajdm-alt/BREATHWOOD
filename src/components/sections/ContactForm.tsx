@@ -23,7 +23,7 @@ export function ContactForm() {
         <div className="contact-layout grid gap-16 lg:grid-cols-2">
           <div>
             <Reveal>
-              <SectionHeading line1="ЗВ'ЯЖІСЬ" line2="З НАМИ" />
+              <SectionHeading line1="ДАВАЙ ПОЗНАЙОМИМОСЬ" line2="БЛІЖЧЕ" />
             </Reveal>
             <Reveal delay={0.1}>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">
