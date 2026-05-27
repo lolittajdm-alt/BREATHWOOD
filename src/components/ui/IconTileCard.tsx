@@ -20,7 +20,7 @@ export function IconTileCard({
 }: IconTileCardProps) {
   return (
     <motion.div
-      whileHover={{ y: -8, rotate: -0.35, scale: 1.03 }}
+      whileHover={{ y: -8, scale: 1.03 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       aria-label={ariaLabel}
       className={`device-card cell-glass group flex flex-col items-center justify-between transition-shadow duration-300 ${

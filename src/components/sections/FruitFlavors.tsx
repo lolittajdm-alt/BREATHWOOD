@@ -6,6 +6,7 @@ import { FlavorTileCard } from "@/components/ui/FlavorTileCard";
 import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { TiltCard } from "@/components/ui/TiltCard";
 import { fruitFlavors } from "@/data/content";
 
 export function FruitFlavors() {
@@ -64,7 +65,7 @@ export function FruitFlavors() {
         >
           {fruitFlavors.map((flavor) => (
             <StripItem key={flavor.id} columns={3}>
-              {renderFlavorCard(flavor)}
+              <TiltCard className="h-full">{renderFlavorCard(flavor)}</TiltCard>
             </StripItem>
           ))}
         </HorizontalScrollStrip>
