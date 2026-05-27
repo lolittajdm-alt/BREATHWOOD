@@ -192,6 +192,5 @@ export async function fetchWarehousesForCity(
     );
   }
 
-  const category = deliveryMethod === "postomat" ? "Postomat" : "Branch";
   return (fallback.data ?? []).filter((item) => item.CategoryOfWarehouse === category);
 }
