@@ -16,6 +16,8 @@ import { MonobankPaymentModal } from "@/components/ui/MonobankPaymentModal";
 import { NovaPoshtaLogo } from "@/components/ui/NovaPoshtaLogo";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { useOrderFlow } from "@/context/OrderFlowContext";
+import { fruitFlavors } from "@/data/content";
 import {
   callNovaPoshta,
   deliveryMethodOptions,
@@ -110,6 +112,12 @@ function filterWarehousesLocal(
 }
 
 export function ContactForm() {
+  const { showCheckout, selectedFlavorIds } = useOrderFlow();
+  const selectedFlavors = useMemo(
+    () => fruitFlavors.filter((flavor) => selectedFlavorIds.includes(flavor.id)),
+    [selectedFlavorIds],
+  );
+
   const [submitted, setSubmitted] = useState(false);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod | null>(null);
   const [cityQuery, setCityQuery] = useState("");
@@ -173,6 +181,21 @@ export function ContactForm() {
     setSelectedCityName("");
     resetWarehouseSelection();
   }, [resetWarehouseSelection]);
+
+  useEffect(() => {
+    if (showCheckout) return;
+
+    setSubmitted(false);
+    setDeliveryMethod(null);
+    setCustomerName("");
+    setPhoneDigits("");
+    setOrderComment("");
+    resetCitySelection();
+    setNpError("");
+    setPaymentModalOpen(false);
+    setPaymentPageUrl("");
+    setPaymentSuccess(false);
+  }, [showCheckout, resetCitySelection]);
 
   const applyCitySelection = useCallback(
     (city: CityOption) => {
@@ -485,6 +508,12 @@ export function ContactForm() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (!showCheckout || selectedFlavorIds.length < 1) {
+      setNpError("Спочатку оберіть смаки та натисніть «Далі».");
+      return;
+    }
+
     const name = customerName.trim();
 
     if (!name) {
@@ -519,7 +548,13 @@ export function ContactForm() {
 
     const reference = `bw-${Date.now()}`;
     const phone = toUaE164(phoneDigits);
+    const flavorsLine =
+      selectedFlavors.length > 0
+        ? `Смаки: ${selectedFlavors.map((flavor) => flavor.name).join(", ")}`
+        : null;
+
     const paymentComment = [
+      flavorsLine,
       `Ім’я: ${name}`,
       `Телефон: ${phone}`,
       `Доставка: ${activeDelivery?.label}`,
@@ -560,14 +595,50 @@ export function ContactForm() {
 
       <div className="section-container">
         <Reveal>
-          <SectionHeading line1="ДАВАЙ ПОЗНАЙОМИСЬ" line2="БЛИЖЧЕ" />
+          {showCheckout ? (
+            <SectionHeading line1="ДОСТАВКА" line2="ТА ОПЛАТА" />
+          ) : (
+            <SectionHeading line1="ЗАМОВЛЕННЯ" line2="BREATH WOOD" />
+          )}
         </Reveal>
 
-        <Reveal delay={0.1}>
-          <form
-            onSubmit={handleSubmit}
-            className="cell-glass mt-6 w-full rounded-xl p-5 sm:mt-8 sm:rounded-[2rem] sm:p-8 md:p-10"
-          >
+        <AnimatePresence mode="wait">
+          {!showCheckout ? (
+            <motion.div
+              key="await-flavors"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={formStepTransition}
+              className="cell-glass mt-6 rounded-xl p-8 text-center sm:mt-8 sm:rounded-[2rem] sm:p-10"
+            >
+              <p className="text-sm text-muted sm:text-base">
+                Оберіть один або кілька смаків у блоці вище та натисніть{" "}
+                <span className="font-semibold text-ink">Далі</span>, щоб відкрити доставку та
+                оплату.
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="checkout-form"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={formStepTransition}
+            >
+              {selectedFlavors.length > 0 ? (
+                <p className="mt-4 text-sm text-muted sm:mt-6">
+                  Обрані смаки:{" "}
+                  <span className="font-medium text-ink">
+                    {selectedFlavors.map((flavor) => flavor.name).join(", ")}
+                  </span>
+                </p>
+              ) : null}
+
+              <form
+                onSubmit={handleSubmit}
+                className="cell-glass mt-6 w-full rounded-xl p-5 sm:mt-8 sm:rounded-[2rem] sm:p-8 md:p-10"
+              >
             {submitted ? (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -860,15 +931,17 @@ export function ContactForm() {
                 {npError ? <p className="mt-4 text-sm text-red-500">{npError}</p> : null}
               </>
             )}
-          </form>
+              </form>
 
-          <MonobankPaymentModal
-            open={paymentModalOpen}
-            pageUrl={paymentPageUrl}
-            amountUah={orderAmountUah}
-            onClose={() => setPaymentModalOpen(false)}
-          />
-        </Reveal>
+              <MonobankPaymentModal
+                open={paymentModalOpen}
+                pageUrl={paymentPageUrl}
+                amountUah={orderAmountUah}
+                onClose={() => setPaymentModalOpen(false)}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <Reveal delay={0.25}>
           <div className="contact-footer mt-20 grid gap-6 border-t border-border pt-16 sm:grid-cols-[1fr_auto]">

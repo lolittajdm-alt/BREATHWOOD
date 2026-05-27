@@ -1,16 +1,26 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FlavorTileCard } from "@/components/ui/FlavorTileCard";
 import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TiltCard } from "@/components/ui/TiltCard";
+import { useOrderFlow } from "@/context/OrderFlowContext";
 import { fruitFlavors } from "@/data/content";
 
 export function FruitFlavors() {
+  const { isOpen, proceedToCheckout } = useOrderFlow();
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const wasOpenRef = useRef(false);
+
+  useEffect(() => {
+    if (isOpen && !wasOpenRef.current) {
+      setSelectedIds(new Set());
+    }
+    wasOpenRef.current = isOpen;
+  }, [isOpen]);
 
   const toggleFlavor = useCallback((id: number) => {
     setSelectedIds((prev) => {
@@ -79,15 +89,16 @@ export function FruitFlavors() {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="mt-8 flex justify-center sm:mt-10"
             >
-              <a
-                href="#contact"
+              <button
+                type="button"
+                onClick={() => proceedToCheckout([...selectedIds])}
                 className="inline-flex w-full max-w-md items-center justify-center rounded-full bg-ink px-8 py-4 text-sm font-semibold uppercase tracking-wider text-surface shadow-card transition-transform active:scale-[0.98] sm:w-auto sm:px-12 sm:py-5 sm:text-base"
               >
                 Далі
                 <span className="ml-2 rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold text-ink">
                   {selectedCount}
                 </span>
-              </a>
+              </button>
             </motion.div>
           ) : null}
         </AnimatePresence>
