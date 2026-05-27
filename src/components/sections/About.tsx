@@ -48,17 +48,21 @@ export function About() {
 
           <div className="h-px w-full bg-border" />
 
-          <div className="space-y-10 sm:space-y-14">
+          <div>
             <Reveal delay={0.15}>
-              <SectionHeading line1="ОСНОВНІ ПЕРЕВАГИ" line2="ТА ФУНКЦІЇ" />
+              <FeatureHeading
+                variant="label"
+                line1="ОСНОВНІ ПЕРЕВАГИ"
+                line2="ТА ФУНКЦІЇ"
+              />
             </Reveal>
 
-            <ul className="space-y-10 sm:space-y-12">
+            <ul className="mt-4 space-y-4 sm:mt-6 sm:space-y-6">
               {mainFeatures.map((feature, i) => (
                 <li key={feature.line1}>
                   <Reveal delay={0.2 + i * 0.08}>
-                    <FeatureHeading line1={feature.line1} line2={feature.line2} />
-                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:mt-4 sm:text-base md:text-lg">
+                    <FeatureHeading variant="feature" line1={feature.line1} line2={feature.line2} />
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted sm:mt-2 sm:space-y-2 sm:text-base">
                       {feature.text}
                     </p>
                   </Reveal>
