@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { IconTileCard } from "@/components/ui/IconTileCard";
 import { TileActionButton } from "@/components/ui/TileActionButton";
 
@@ -21,6 +22,10 @@ export function FlavorTileCard({
   selected,
   onToggle,
 }: FlavorTileCardProps) {
+  const pathname = usePathname();
+  const repoBasePath = pathname?.startsWith("/BREATHWOOD") ? "/BREATHWOOD" : "";
+  const imageSrc = image.startsWith(repoBasePath) ? image : `${repoBasePath}${image}`;
+
   return (
     <IconTileCard
       ariaLabel={name}
@@ -34,7 +39,7 @@ export function FlavorTileCard({
     >
       <div className="h-14 w-14 overflow-hidden rounded-xl bg-card/70 shadow-soft transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20">
         <Image
-          src={image}
+          src={imageSrc}
           alt={name}
           width={120}
           height={120}
