@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
   output: isGithubPages ? "export" : undefined,
   basePath,
   assetPrefix: basePath ? `${basePath}/` : undefined,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
   trailingSlash: isGithubPages,
   images: {
     unoptimized: isGithubPages,

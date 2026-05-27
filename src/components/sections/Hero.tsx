@@ -6,6 +6,7 @@ import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { portfolioItems } from "@/data/content";
+import { assetPath } from "@/lib/assetPath";
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -116,7 +117,7 @@ export function Hero() {
                 >
                   <div className="relative overflow-hidden">
                     <img
-                      src={item.image}
+                      src={assetPath(item.image)}
                       alt={item.title}
                       className={`w-full object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 ${item.tall ? "aspect-[3/4]" : "aspect-[4/3]"}`}
                     />

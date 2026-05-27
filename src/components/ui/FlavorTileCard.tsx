@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { IconTileCard } from "@/components/ui/IconTileCard";
 import { TileActionButton } from "@/components/ui/TileActionButton";
+import { assetPath } from "@/lib/assetPath";
 
 type FlavorTileCardProps = {
   name: string;
@@ -37,12 +37,10 @@ export function FlavorTileCard({
       }
     >
       <div className="absolute inset-0">
-        <Image
-          src={image}
+        <img
+          src={assetPath(image)}
           alt={name}
-          fill
-          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-black/20" />
       </div>
