@@ -38,28 +38,26 @@ export function TableOfContent() {
           </h2>
         </Reveal>
 
-        <div className="toc-grid grid-cols-2-mobile mt-10 items-stretch lg:mt-16 lg:grid-cols-4 lg:gap-6">
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-16 lg:grid-cols-4 lg:gap-6">
           {tocCards.map((card, i) => (
             <Reveal key={card.id} delay={i * 0.1}>
               <TiltCard className="h-full">
                 <motion.div
                   whileHover={{ y: -8, boxShadow: "0 20px 50px rgba(0,0,0,0.12)" }}
                   transition={{ duration: 0.4 }}
-                  className="feature-card group flex h-full flex-col bg-accent shadow-card sm:min-h-[260px] sm:cursor-grab sm:rounded-[2rem] sm:p-8 sm:active:cursor-grabbing md:min-h-[280px]"
+                  aria-label={card.title}
+                  className="device-card group flex flex-col items-center justify-between bg-accent shadow-card sm:cursor-grab sm:active:cursor-grabbing"
                 >
-                  <div className="mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ink/10 transition-transform duration-300 group-hover:scale-110 sm:mb-8 sm:h-16 sm:w-16 sm:rounded-2xl">
-                    <DoodleIcon
-                      type={iconMap[card.icon as keyof typeof iconMap]}
-                      className="h-7 w-7 text-ink sm:h-10 sm:w-10"
-                    />
-                  </div>
-                  <h3 className="font-display text-lg font-bold leading-snug sm:text-xl md:text-2xl">
-                    {card.title}
-                  </h3>
-                  <div className="mt-auto pt-6 sm:pt-8">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10">
-                    <DoodleIcon type="arrow" className="h-4 w-4" />
+                  <div className="flex flex-1 items-center justify-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-ink/10 transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20 sm:rounded-2xl">
+                      <DoodleIcon
+                        type={iconMap[card.icon as keyof typeof iconMap]}
+                        className="h-8 w-8 text-ink sm:h-11 sm:w-11"
+                      />
                     </div>
+                  </div>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10">
+                    <DoodleIcon type="arrow" className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </div>
                 </motion.div>
               </TiltCard>

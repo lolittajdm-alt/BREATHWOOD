@@ -111,6 +111,33 @@
     @apply min-h-[220px] rounded-[1.5rem] p-5;
   }
 
+  .card-strip {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .card-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card-strip-item {
+    flex: 0 0 calc((100% - 1.5rem) / 3);
+  }
+
+  @media (min-width: 640px) {
+    .card-strip-item {
+      flex: 0 0 calc((100% - 2rem) / 3);
+    }
+  }
+
+  .device-card {
+    @apply aspect-square min-h-0 rounded-xl p-4 sm:rounded-[2rem] sm:p-6;
+  }
+
+  .flavor-card {
+    @apply aspect-square min-h-0 rounded-xl p-4 sm:rounded-[2rem] sm:p-5;
+  }
+
   /* Mobile & tablet: 2 columns */
   .masonry-grid {
     column-count: 2;

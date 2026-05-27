@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
+import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { fruitFlavors } from "@/data/content";
@@ -10,7 +11,7 @@ export function FruitFlavors() {
   return (
     <section
       id="flavors"
-      className="section-shell relative -mt-4 w-full overflow-hidden pb-16 pt-8 md:-mt-10 md:pb-32 md:pt-12"
+      className="section-shell relative -mt-4 w-full overflow-x-clip pb-16 pt-8 md:-mt-10 md:pb-32 md:pt-12"
     >
       <span className="section-number absolute bottom-4 right-1 sm:bottom-8 sm:right-4 md:right-12">
         05
@@ -33,34 +34,38 @@ export function FruitFlavors() {
           </h2>
         </Reveal>
 
-        <div className="flavors-grid grid-cols-2-mobile mt-10 items-stretch lg:mt-16 lg:grid-cols-3 lg:gap-6">
+        <HorizontalScrollStrip ariaLabel="Фруктові смаки" className="mt-10 lg:mt-16">
           {fruitFlavors.map((flavor, i) => (
-            <Reveal key={flavor.id} delay={i * 0.1}>
-              <TiltCard className="h-full">
-                <motion.div
-                  whileHover={{ y: -8, boxShadow: "0 20px 50px rgba(0,0,0,0.12)" }}
-                  transition={{ duration: 0.4 }}
-                  className={`feature-card group flex h-full flex-col bg-gradient-to-br ${flavor.tint} shadow-card sm:min-h-[260px] sm:cursor-grab sm:rounded-[2rem] sm:p-8 sm:active:cursor-grabbing md:min-h-[280px]`}
-                >
-                  <div className="mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/50 text-2xl shadow-sm transition-transform duration-300 group-hover:scale-110 sm:mb-8 sm:h-16 sm:w-16 sm:rounded-2xl sm:text-3xl md:text-4xl">
-                    {flavor.emoji}
-                  </div>
-                  <h3 className="font-display text-lg font-bold leading-snug sm:text-xl md:text-2xl">
-                    {flavor.name}
-                  </h3>
-                  <p className="mt-2 text-xs font-medium uppercase tracking-[0.2em] text-ink/50 sm:text-sm">
-                    {flavor.abbr} · натуральний аромат
-                  </p>
-                  <div className="mt-auto pt-6 sm:pt-8">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10">
-                      <DoodleIcon type="arrow" className="h-4 w-4" />
+            <StripItem key={flavor.id}>
+              <Reveal delay={i * 0.05} className="h-full w-full">
+                <TiltCard className="h-full">
+                  <motion.div
+                    whileHover={{ y: -8, boxShadow: "0 20px 50px rgba(0,0,0,0.12)" }}
+                    transition={{ duration: 0.4 }}
+                    className={`flavor-card group flex aspect-square h-full flex-col bg-gradient-to-br ${flavor.tint} shadow-card`}
+                  >
+                    <div className="flex flex-1 flex-col items-center justify-center text-center">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/50 text-2xl shadow-sm transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 sm:text-3xl">
+                        {flavor.emoji}
+                      </div>
+                      <h3 className="mt-3 font-display text-sm font-bold leading-tight sm:text-base">
+                        {flavor.name}
+                      </h3>
+                      <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.15em] text-ink/50 sm:text-xs">
+                        {flavor.abbr}
+                      </p>
                     </div>
-                  </div>
-                </motion.div>
-              </TiltCard>
-            </Reveal>
+                    <div className="flex justify-center pt-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-surface transition-transform duration-300 group-hover:scale-110 sm:h-9 sm:w-9">
+                        <DoodleIcon type="arrow" className="h-3.5 w-3.5" />
+                      </div>
+                    </div>
+                  </motion.div>
+                </TiltCard>
+              </Reveal>
+            </StripItem>
           ))}
-        </div>
+        </HorizontalScrollStrip>
       </div>
     </section>
   );
