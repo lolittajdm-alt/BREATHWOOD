@@ -120,12 +120,30 @@
     display: none;
   }
 
-  .card-strip-item {
+  .card-strip-lane {
+    @apply overflow-visible;
+  }
+
+  .card-strip-item-3 {
     flex: 0 0 calc((100% - 1.5rem) / 3);
   }
 
+  .card-strip-item-2 {
+    flex: 0 0 calc((100% - 0.75rem) / 2);
+  }
+
   @media (min-width: 640px) {
-    .card-strip-item {
+    .card-strip-item-3 {
+      flex: 0 0 calc((100% - 2rem) / 3);
+    }
+
+    .card-strip-item-2 {
+      flex: 0 0 calc((100% - 1rem) / 2);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .card-strip-item-2 {
       flex: 0 0 calc((100% - 2rem) / 3);
     }
   }

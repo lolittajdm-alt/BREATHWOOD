@@ -1,10 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
+import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
-import { useItemsPerPage } from "@/hooks/useItemsPerPage";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { testimonials } from "@/data/content";
 
 type Testimonial = (typeof testimonials)[number];
@@ -12,9 +12,9 @@ type Testimonial = (typeof testimonials)[number];
 function TestimonialCard({ item }: { item: Testimonial }) {
   return (
     <motion.div
-      whileHover={{ y: -6 }}
+      whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.35 }}
-      className="testimonial-card flex h-full flex-col rounded-[2rem] border border-ink/10 bg-white/80 p-6 shadow-[0_4px_16px_rgba(0,0,0,0.04)] backdrop-blur-sm lg:min-h-[320px] lg:p-8"
+      className="testimonial-card flex h-full min-h-[220px] flex-col rounded-[1.5rem] border border-ink/10 bg-white/90 p-5 shadow-[0_10px_32px_rgba(0,0,0,0.08)] ring-1 ring-ink/5 backdrop-blur-sm sm:min-h-[280px] sm:rounded-[2rem] sm:p-6 lg:min-h-[300px] lg:p-8"
     >
       <div className="mb-3 flex shrink-0 gap-0.5 sm:mb-6 sm:gap-1" aria-label="5 зірок">
         {Array.from({ length: 5 }).map((_, star) => (
@@ -33,126 +33,27 @@ function TestimonialCard({ item }: { item: Testimonial }) {
 }
 
 export function Testimonials() {
-  const itemsPerPage = useItemsPerPage({ sm: 2, md: 2, lg: 3 });
-  const [page, setPage] = useState(0);
-  const [direction, setDirection] = useState(0);
-
-  const totalPages = Math.ceil(testimonials.length / itemsPerPage);
-
-  useEffect(() => {
-    setPage((current) => Math.min(current, Math.max(totalPages - 1, 0)));
-  }, [itemsPerPage, totalPages]);
-
-  const currentItems = useMemo(() => {
-    const start = page * itemsPerPage;
-    return testimonials.slice(start, start + itemsPerPage);
-  }, [page, itemsPerPage]);
-
-  const goTo = useCallback(
-    (next: number) => {
-      if (next === page) return;
-      const isForward = next > page || (next === 0 && page === totalPages - 1);
-      setDirection(isForward ? 1 : -1);
-      setPage(next);
-    },
-    [page, totalPages]
-  );
-
-  const goPrev = useCallback(() => {
-    goTo(page === 0 ? totalPages - 1 : page - 1);
-  }, [goTo, page, totalPages]);
-
-  const goNext = useCallback(() => {
-    goTo(page === totalPages - 1 ? 0 : page + 1);
-  }, [goTo, page, totalPages]);
-
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") goPrev();
-      if (e.key === "ArrowRight") goNext();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [goNext, goPrev]);
-
   return (
     <section
       id="testimonials"
-      className="section-shell relative -mt-4 pb-12 pt-8 md:-mt-10 md:pb-16 md:pt-12"
+      className="section-shell relative -mt-4 overflow-x-clip pb-12 pt-8 md:-mt-10 md:pb-16 md:pt-12"
     >
       <span className="section-number absolute top-6 right-2 sm:top-12 sm:right-4 md:right-12">
         02
       </span>
 
       <div className="section-container">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <Reveal>
-            <h2 className="section-heading">
-              Відгуки
-              <span className="text-accent">.</span>
-            </h2>
-          </Reveal>
+        <Reveal>
+          <SectionHeading line1="ВІДГУКИ" line2="КЛІЄНТІВ" />
+        </Reveal>
 
-          <Reveal delay={0.1}>
-            <div className="flex items-center gap-3 self-start sm:self-auto">
-              <button
-                type="button"
-                onClick={goPrev}
-                aria-label="Попередні відгуки"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-ink/15 bg-white transition-colors active:bg-accent sm:h-12 sm:w-12 sm:hover:border-ink/30 sm:hover:bg-accent"
-              >
-                <DoodleIcon type="arrow" className="h-4 w-4 rotate-180 sm:h-5 sm:w-5" />
-              </button>
-              <button
-                type="button"
-                onClick={goNext}
-                aria-label="Наступні відгуки"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-ink/15 bg-white transition-colors active:bg-accent sm:h-12 sm:w-12 sm:hover:border-ink/30 sm:hover:bg-accent"
-              >
-                <DoodleIcon type="arrow" className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-            </div>
-          </Reveal>
-        </div>
-
-        <div className="relative mt-8 overflow-x-hidden overflow-y-visible px-1 py-4 sm:mt-12 sm:py-5">
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={`${page}-${itemsPerPage}`}
-              custom={direction}
-              initial={{ opacity: 0, x: direction >= 0 ? 48 : -48 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction >= 0 ? -48 : 48 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="testimonials-grid grid-cols-2-mobile items-stretch lg:grid-cols-3 lg:gap-6"
-            >
-              {currentItems.map((item) => (
-                <div key={item.id} className="p-1 sm:p-2">
-                  <TestimonialCard item={item} />
-                </div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <div className="mt-6 flex items-center justify-center gap-2 sm:mt-8">
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => goTo(i)}
-              aria-label={`Сторінка відгуків ${i + 1}`}
-              aria-current={i === page ? "true" : undefined}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                i === page ? "w-8 bg-ink" : "w-2.5 bg-ink/20 active:bg-ink/40 sm:hover:bg-ink/40"
-              }`}
-            />
+        <HorizontalScrollStrip ariaLabel="Відгуки клієнтів" className="mt-8 sm:mt-12">
+          {testimonials.map((item) => (
+            <StripItem key={item.id} columns={2}>
+              <TestimonialCard item={item} />
+            </StripItem>
           ))}
-        </div>
-
-        <p className="mt-3 text-center text-xs uppercase tracking-[0.2em] text-muted sm:mt-4 sm:tracking-[0.25em]">
-          {page + 1} / {totalPages}
-        </p>
+        </HorizontalScrollStrip>
       </div>
     </section>
   );

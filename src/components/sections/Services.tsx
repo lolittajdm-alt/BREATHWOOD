@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { orderSteps } from "@/data/content";
 
 export function Services() {
@@ -17,10 +18,7 @@ export function Services() {
         <div className="services-layout grid gap-16 lg:grid-cols-2 lg:items-start">
           <div>
             <Reveal>
-              <h2 className="section-heading">
-                Як замовити
-                <span className="playful-tilt text-accent">.</span>
-              </h2>
+              <SectionHeading line1="ЯК" line2="ЗАМОВИТИ" />
             </Reveal>
             <Reveal delay={0.1}>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">

@@ -1,6 +1,7 @@
 "use client";
 
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const mainFeatures = [
   {
@@ -28,9 +29,7 @@ export function About() {
 
       <div className="section-container">
         <Reveal>
-          <h2 className="section-heading">
-            Про мене<span className="playful-tilt text-accent">.</span>
-          </h2>
+          <SectionHeading line1="ПРО" line2="ПРОДУКТ" />
         </Reveal>
 
         <div className="mt-8 max-w-3xl space-y-8 sm:mt-10 sm:space-y-12">

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { tocCards } from "@/data/content";
 
@@ -32,10 +33,7 @@ export function TableOfContent() {
 
       <div className="section-container">
         <Reveal>
-          <h2 className="section-heading-lg">
-            <span className="playful-tilt">ПРИСТРОЇ</span>
-            <span className="text-accent">.</span>
-          </h2>
+          <SectionHeading line1="НАШІ" line2="ПРИСТРОЇ" />
         </Reveal>
 
         <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:mt-16 lg:grid-cols-4 lg:gap-6">

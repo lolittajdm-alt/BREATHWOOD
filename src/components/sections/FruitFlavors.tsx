@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { HorizontalScrollStrip, StripItem } from "@/components/ui/HorizontalScrollStrip";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TiltCard } from "@/components/ui/TiltCard";
 import { fruitFlavors } from "@/data/content";
 
@@ -11,7 +12,7 @@ export function FruitFlavors() {
   return (
     <section
       id="flavors"
-      className="section-shell relative -mt-4 w-full overflow-x-clip pb-16 pt-8 md:-mt-10 md:pb-32 md:pt-12"
+      className="section-shell relative -mt-4 w-full overflow-x-clip overflow-y-visible pb-16 pt-8 md:-mt-10 md:pb-32 md:pt-12"
     >
       <span className="section-number absolute bottom-4 right-1 sm:bottom-8 sm:right-4 md:right-12">
         05
@@ -26,26 +27,21 @@ export function FruitFlavors() {
 
       <div className="section-container">
         <Reveal>
-          <h2 className="section-heading-lg">
-            ФРУКТОВІ
-            <br />
-            <span className="playful-tilt">СМАКИ</span>
-            <span className="text-accent">.</span>
-          </h2>
+          <SectionHeading line1="ФРУКТОВІ" line2="СМАКИ" />
         </Reveal>
 
         <HorizontalScrollStrip ariaLabel="Фруктові смаки" className="mt-10 lg:mt-16">
           {fruitFlavors.map((flavor, i) => (
-            <StripItem key={flavor.id}>
+            <StripItem key={flavor.id} columns={3}>
               <Reveal delay={i * 0.05} className="h-full w-full">
                 <TiltCard className="h-full">
                   <motion.div
-                    whileHover={{ y: -8, boxShadow: "0 20px 50px rgba(0,0,0,0.12)" }}
-                    transition={{ duration: 0.4 }}
-                    className={`flavor-card group flex aspect-square h-full flex-col bg-gradient-to-br ${flavor.tint} shadow-card`}
+                    whileHover={{ scale: 1.03 }}
+                    transition={{ duration: 0.35 }}
+                    className={`flavor-card group flex aspect-square h-full flex-col bg-gradient-to-br ${flavor.tint} ring-1 ring-ink/10 shadow-[0_12px_36px_rgba(0,0,0,0.1)]`}
                   >
                     <div className="flex flex-1 flex-col items-center justify-center text-center">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/50 text-2xl shadow-sm transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 sm:text-3xl">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/60 text-2xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-transform duration-300 group-hover:scale-110 sm:h-14 sm:w-14 sm:text-3xl">
                         {flavor.emoji}
                       </div>
                       <h3 className="mt-3 font-display text-sm font-bold leading-tight sm:text-base">

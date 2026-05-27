@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -22,12 +23,7 @@ export function ContactForm() {
         <div className="contact-layout grid gap-16 lg:grid-cols-2">
           <div>
             <Reveal>
-              <h2 className="section-heading">
-                Давай
-                <br />
-                <span className="playful-tilt">поспілкуємось</span>
-                <span className="text-accent">.</span>
-              </h2>
+              <SectionHeading line1="ЗВ'ЯЖІСЬ" line2="З НАМИ" />
             </Reveal>
             <Reveal delay={0.1}>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">
