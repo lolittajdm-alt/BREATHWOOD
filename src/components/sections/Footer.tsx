@@ -13,12 +13,12 @@ const links = [
 
 export function Footer() {
   return (
-    <footer className="section-shell relative border-t border-ink/10 py-12 pb-[max(3rem,env(safe-area-inset-bottom))] md:py-16">
+    <footer className="section-shell relative border-t border-ink/10 py-10 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:py-16">
       <div className="section-container">
         <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
           <div>
             <motion.h2
-              className="font-display text-[clamp(1.75rem,8vw,4rem)] font-extrabold leading-none"
+              className="font-display text-[clamp(1.375rem,6.5vw,4rem)] font-extrabold leading-none"
               whileHover={{ scale: 1.02 }}
             >
               BREATH

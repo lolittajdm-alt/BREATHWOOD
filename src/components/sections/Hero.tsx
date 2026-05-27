@@ -24,7 +24,7 @@ export function Hero() {
     <section
       ref={ref}
       id="hero"
-      className="section-shell relative overflow-hidden pb-12 pt-6 sm:pb-14 sm:pt-8 md:pb-16"
+      className="section-shell relative overflow-hidden pb-10 pt-5 sm:pb-14 sm:pt-8 md:pb-16"
     >
       <span className="section-number absolute top-12 right-1 sm:top-20 sm:right-4 md:right-12">
         01
@@ -35,7 +35,7 @@ export function Hero() {
       <motion.div style={{ y, opacity }} className="section-container mt-4 sm:mt-8">
         <div className="relative max-w-4xl">
           <Reveal delay={0.15}>
-            <h1 className="font-display text-[clamp(2.75rem,13vw,9rem)] font-extrabold leading-[0.88] tracking-tight sm:leading-[0.85]">
+            <h1 className="hero-title sm:leading-[0.85]">
               <span className="relative inline-block">
                 <span className="relative z-10">B</span>
                 <span className="playful-tilt relative z-10">R</span>
@@ -52,7 +52,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.25}>
-            <h1 className="font-display text-[clamp(2.75rem,13vw,9rem)] font-extrabold leading-[0.88] tracking-tight sm:leading-[0.85]">
+            <h1 className="hero-title sm:leading-[0.85]">
               <span className="relative inline-block">
                 <span className="relative z-10">W</span>
                 <span className="playful-tilt-alt relative z-10">O</span>
@@ -68,7 +68,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.4}>
-            <p className="mt-6 max-w-lg text-sm leading-relaxed text-muted md:text-base">
+            <p className="mt-4 max-w-lg text-xs leading-relaxed text-muted sm:mt-6 sm:text-sm md:text-base">
               Новий ритуал замість сигарет 2026
             </p>
           </Reveal>
@@ -100,7 +100,7 @@ export function Hero() {
         </motion.p>
       </motion.div>
 
-      <div className="section-container mt-10 sm:mt-16 md:mt-20">
+      <div className="section-container mt-8 sm:mt-16 md:mt-20">
         <div className="masonry-grid">
           {portfolioItems.map((item, i) => (
             <Reveal key={item.id} delay={i * 0.08}>

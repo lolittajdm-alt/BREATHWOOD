@@ -14,7 +14,7 @@ function TestimonialCard({ item }: { item: Testimonial }) {
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.35 }}
-      className="flex h-full min-h-[280px] flex-col rounded-[1.5rem] border border-ink/10 bg-white/80 p-6 shadow-[0_4px_16px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:min-h-[300px] sm:rounded-[2rem] sm:p-8"
+      className="flex h-full min-h-[240px] flex-col rounded-xl border border-ink/10 bg-white/80 p-5 shadow-[0_4px_16px_rgba(0,0,0,0.04)] backdrop-blur-sm sm:min-h-[300px] sm:rounded-[2rem] sm:p-8"
     >
       <div className="mb-4 flex shrink-0 gap-0.5 sm:mb-6 sm:gap-1" aria-label="5 зірок">
         {Array.from({ length: 5 }).map((_, star) => (
@@ -78,7 +78,7 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="section-shell relative -mt-4 pb-14 pt-8 md:-mt-10 md:pb-16 md:pt-12"
+      className="section-shell relative -mt-4 pb-12 pt-6 md:-mt-10 md:pb-16 md:pt-12"
     >
       <span className="section-number absolute top-6 right-2 sm:top-12 sm:right-4 md:right-12">
         02

@@ -15,11 +15,11 @@ export function ContactForm() {
   };
 
   return (
-    <section id="contact" className="section-shell relative py-16 md:py-32">
+    <section id="contact" className="section-shell relative py-12 md:py-32">
       <span className="section-number absolute top-4 left-1/2 -translate-x-1/2 sm:top-8">07</span>
 
       <div className="section-container">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
           <div>
             <Reveal>
               <h2 className="section-heading">
@@ -30,7 +30,7 @@ export function ContactForm() {
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="mt-6 max-w-sm text-base leading-relaxed text-muted">
+              <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">
                 Є ідея або проєкт? Напиши — і створимо щось справді особливе разом.
               </p>
             </Reveal>
@@ -52,7 +52,7 @@ export function ContactForm() {
           <Reveal direction="right" delay={0.15}>
             <form
               onSubmit={handleSubmit}
-              className="glass rounded-[1.5rem] p-6 sm:rounded-[2rem] sm:p-8 md:p-10"
+              className="glass rounded-xl p-5 sm:rounded-[2rem] sm:p-8 md:p-10"
             >
               {submitted ? (
                 <motion.div

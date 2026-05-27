@@ -32,6 +32,9 @@ yarn-error.log*
 # env files
 .env*
 
+# локальний GitHub token (scripts/push-github.sh)
+breathwood-github-token
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

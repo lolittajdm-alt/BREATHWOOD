@@ -10,14 +10,14 @@ export function FruitFlavors() {
   return (
     <section
       id="flavors"
-      className="section-shell relative -mt-4 w-full overflow-hidden pb-16 pt-8 md:-mt-10 md:pb-32 md:pt-12"
+      className="section-shell relative -mt-4 w-full overflow-hidden pb-12 pt-6 md:-mt-10 md:pb-32 md:pt-12"
     >
       <span className="section-number absolute bottom-4 right-1 sm:bottom-8 sm:right-4 md:right-12">
         04
       </span>
 
       <p
-        className="pointer-events-none absolute top-1/2 left-1/2 max-w-[100vw] -translate-x-1/2 -translate-y-1/2 select-none overflow-hidden font-display text-[clamp(3rem,18vw,12rem)] font-black uppercase leading-none text-ink/[0.03]"
+        className="bg-watermark pointer-events-none absolute top-1/2 left-1/2 max-w-[100vw] -translate-x-1/2 -translate-y-1/2 select-none overflow-hidden font-display font-black uppercase leading-none text-ink/[0.03]"
         aria-hidden="true"
       >
         СМАКИ
@@ -33,19 +33,19 @@ export function FruitFlavors() {
           </h2>
         </Reveal>
 
-        <div className="mt-10 grid items-stretch gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+        <div className="mt-8 grid items-stretch gap-3 sm:mt-16 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {fruitFlavors.map((flavor, i) => (
             <Reveal key={flavor.id} delay={i * 0.1}>
               <TiltCard className="h-full">
                 <motion.div
                   whileHover={{ y: -8, boxShadow: "0 20px 50px rgba(0,0,0,0.12)" }}
                   transition={{ duration: 0.4 }}
-                  className={`group flex h-full min-h-[220px] flex-col rounded-[1.5rem] bg-gradient-to-br ${flavor.tint} p-5 shadow-card sm:min-h-[260px] sm:cursor-grab sm:rounded-[2rem] sm:p-8 sm:active:cursor-grabbing md:min-h-[280px]`}
+                  className={`feature-card group flex h-full flex-col bg-gradient-to-br ${flavor.tint} shadow-card sm:min-h-[260px] sm:cursor-grab sm:rounded-[2rem] sm:p-8 sm:active:cursor-grabbing md:min-h-[280px]`}
                 >
-                  <div className="mb-8 flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/50 text-3xl shadow-sm transition-transform duration-300 group-hover:scale-110 md:text-4xl">
+                  <div className="mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/50 text-2xl shadow-sm transition-transform duration-300 group-hover:scale-110 sm:mb-8 sm:h-16 sm:w-16 sm:rounded-2xl sm:text-3xl md:text-4xl">
                     {flavor.emoji}
                   </div>
-                  <h3 className="font-display text-xl font-bold leading-snug md:text-2xl">
+                  <h3 className="font-display text-lg font-bold leading-snug sm:text-xl md:text-2xl">
                     {flavor.name}
                   </h3>
                   <p className="mt-2 text-sm font-medium uppercase tracking-[0.2em] text-ink/50">
