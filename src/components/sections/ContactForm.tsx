@@ -29,7 +29,9 @@ export function ContactForm() {
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("warehouse");
   const [cityQuery, setCityQuery] = useState("");
   const [cities, setCities] = useState<CityOption[]>([]);
+  const [showCityList, setShowCityList] = useState(false);
   const [selectedCityRef, setSelectedCityRef] = useState("");
+  const [selectedCityName, setSelectedCityName] = useState("");
   const [warehouses, setWarehouses] = useState<WarehouseOption[]>([]);
   const [selectedWarehouseRef, setSelectedWarehouseRef] = useState("");
   const [loadingCities, setLoadingCities] = useState(false);
@@ -43,7 +45,9 @@ export function ContactForm() {
     const query = cityQuery.trim();
     if (!hasApiKey || query.length < 2) {
       setCities([]);
+      setShowCityList(false);
       setSelectedCityRef("");
+      setSelectedCityName("");
       setWarehouses([]);
       setSelectedWarehouseRef("");
       return;
@@ -62,8 +66,10 @@ export function ContactForm() {
         });
 
         if (!json?.success) {
-          setNpError("Нова Пошта: не вдалося знайти міста. Перевірте API-ключ.");
+          const apiMessage = (json as { errors?: { message?: string }[] })?.errors?.[0]?.message;
+          setNpError(apiMessage ?? "Нова Пошта: не вдалося знайти міста. Перевірте API-ключ.");
           setCities([]);
+          setShowCityList(false);
           return;
         }
 
@@ -73,6 +79,7 @@ export function ContactForm() {
           name: item.Present,
         }));
         setCities(mapped);
+        setShowCityList(mapped.length > 0);
       } catch {
         setNpError("Не вдалося завантажити міста Нової Пошти.");
       } finally {
@@ -128,11 +135,21 @@ export function ContactForm() {
     void loadWarehouses();
   }, [selectedCityRef, deliveryMethod, hasApiKey, activeDelivery.typeRef, activeDelivery.pointLabel]);
 
-  const handleCityPick = (value: string) => {
+  const handleCityInput = (value: string) => {
     setCityQuery(value);
-    const found = cities.find((city) => city.name === value);
-    setSelectedCityRef(found?.ref ?? "");
+    setSelectedCityRef("");
+    setSelectedCityName("");
     setSelectedWarehouseRef("");
+    setShowCityList(true);
+  };
+
+  const handleCitySelect = (city: CityOption) => {
+    setCityQuery(city.name);
+    setSelectedCityRef(city.ref);
+    setSelectedCityName(city.name);
+    setSelectedWarehouseRef("");
+    setShowCityList(false);
+    setNpError("");
   };
 
   const handleDeliveryMethodChange = (method: DeliveryMethod) => {
@@ -256,7 +273,7 @@ export function ContactForm() {
                     </div>
                   </div>
 
-                  <div>
+                  <div className="relative">
                     <label
                       htmlFor="city"
                       className="text-xs font-semibold uppercase tracking-wider text-muted"
@@ -266,20 +283,47 @@ export function ContactForm() {
                     <input
                       id="city"
                       required
-                      list="np-cities-list"
+                      autoComplete="off"
                       value={cityQuery}
-                      onChange={(e) => handleCityPick(e.target.value)}
+                      onChange={(e) => handleCityInput(e.target.value)}
+                      onFocus={() => cities.length > 0 && setShowCityList(true)}
                       disabled={!hasApiKey}
-                      className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink disabled:cursor-not-allowed disabled:opacity-60"
-                      placeholder="Почніть вводити місто..."
+                      className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink disabled:cursor-not-allowed disabled:opacity-60"
+                      placeholder="Почніть вводити місто (мін. 2 літери)..."
                     />
-                    <datalist id="np-cities-list">
-                      {cities.map((city) => (
-                        <option key={city.ref} value={city.name} />
-                      ))}
-                    </datalist>
                     {loadingCities ? (
                       <p className="mt-2 text-xs text-muted">Шукаємо міста...</p>
+                    ) : null}
+                    {showCityList && cities.length > 0 ? (
+                      <ul
+                        role="listbox"
+                        className="absolute left-0 right-0 top-full z-20 mt-1 max-h-52 overflow-y-auto rounded-2xl border border-ink/10 bg-card py-1 shadow-card"
+                      >
+                        {cities.map((city) => (
+                          <li key={city.ref}>
+                            <button
+                              type="button"
+                              role="option"
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => handleCitySelect(city)}
+                              className={`w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent/40 ${
+                                selectedCityRef === city.ref ? "bg-accent/30 font-semibold" : ""
+                              }`}
+                            >
+                              {city.name}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {!loadingCities &&
+                    cityQuery.trim().length >= 2 &&
+                    cities.length === 0 &&
+                    hasApiKey ? (
+                      <p className="mt-2 text-xs text-muted">Місто не знайдено. Спробуйте інший запит.</p>
+                    ) : null}
+                    {selectedCityName ? (
+                      <p className="mt-2 text-xs text-muted">Обрано: {selectedCityName}</p>
                     ) : null}
                   </div>
                   <div>
