@@ -35,6 +35,8 @@ jobs:
           GITHUB_PAGES: "true"
           GITHUB_REPOSITORY: ${{ github.repository }}
           NEXT_PUBLIC_NOVA_POSHTA_API_KEY: ${{ secrets.NOVA_POSHTA_API_KEY }}
+          NEXT_PUBLIC_MONOBANK_TOKEN: ${{ secrets.MONOBANK_TOKEN }}
+          NEXT_PUBLIC_ORDER_AMOUNT_UAH: ${{ vars.ORDER_AMOUNT_UAH || '1299' }}
         run: npm run build
 
       - name: Upload artifact

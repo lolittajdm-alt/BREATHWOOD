@@ -12,6 +12,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { MonobankPaymentModal } from "@/components/ui/MonobankPaymentModal";
 import { NovaPoshtaLogo } from "@/components/ui/NovaPoshtaLogo";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -26,13 +27,21 @@ import {
   type WarehouseApiItem,
 } from "@/lib/novaPoshta";
 import {
+  buildPaymentRedirectUrl,
+  createMonobankInvoice,
+  getOrderAmountKopiykas,
+  getOrderAmountUah,
+} from "@/lib/monobank";
+import {
   formatUaNationalPhone,
   isUaPhoneComplete,
   parseUaNationalPhoneDigits,
+  toUaE164,
   UA_PHONE_PREFIX,
 } from "@/lib/uaPhone";
 
 const NOVA_POSHTA_API_KEY = process.env.NEXT_PUBLIC_NOVA_POSHTA_API_KEY ?? "";
+const MONOBANK_TOKEN = process.env.NEXT_PUBLIC_MONOBANK_TOKEN ?? "";
 const WAREHOUSE_LIST_LIMIT = 500;
 
 type CityOption = {
@@ -120,12 +129,21 @@ export function ContactForm() {
   const [loadingWarehouses, setLoadingWarehouses] = useState(false);
   const [loadingRemoteSearch, setLoadingRemoteSearch] = useState(false);
   const [phoneDigits, setPhoneDigits] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [orderComment, setOrderComment] = useState("");
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [paymentPageUrl, setPaymentPageUrl] = useState("");
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [npError, setNpError] = useState("");
+
+  const orderAmountUah = getOrderAmountUah();
 
   const warehouseFieldRef = useRef<HTMLDivElement>(null);
   const warehouseLoadIdRef = useRef(0);
 
   const hasApiKey = NOVA_POSHTA_API_KEY.length > 0;
+  const hasMonobankToken = MONOBANK_TOKEN.length > 0;
   const activeDelivery = deliveryMethod
     ? deliveryMethodOptions.find((item) => item.id === deliveryMethod)
     : null;
@@ -455,8 +473,24 @@ export function ContactForm() {
     setPhoneDigits(parseUaNationalPhoneDigits(value));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("payment") === "success") {
+      setPaymentSuccess(true);
+      setSubmitted(true);
+      const cleanUrl = `${window.location.pathname}${window.location.hash}`;
+      window.history.replaceState({}, "", cleanUrl);
+    }
+  }, []);
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const name = customerName.trim();
+
+    if (!name) {
+      setNpError("Введіть ім’я.");
+      return;
+    }
     if (!isUaPhoneComplete(phoneDigits)) {
       setNpError("Введіть номер телефону: 9 цифр після +380 (без 0 на початку).");
       return;
@@ -475,7 +509,47 @@ export function ContactForm() {
       );
       return;
     }
-    setSubmitted(true);
+    if (!hasMonobankToken) {
+      setNpError("Токен Monobank ще не підключений. Додайте NEXT_PUBLIC_MONOBANK_TOKEN.");
+      return;
+    }
+
+    setPaymentLoading(true);
+    setNpError("");
+
+    const reference = `bw-${Date.now()}`;
+    const phone = toUaE164(phoneDigits);
+    const paymentComment = [
+      `Ім’я: ${name}`,
+      `Телефон: ${phone}`,
+      `Доставка: ${activeDelivery?.label}`,
+      `Місто: ${selectedCityName}`,
+      `${activeDelivery?.pointLabel}: ${selectedWarehouseName}`,
+      orderComment.trim() ? `Коментар: ${orderComment.trim()}` : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
+    try {
+      const invoice = await createMonobankInvoice(MONOBANK_TOKEN, {
+        amountKopiykas: getOrderAmountKopiykas(),
+        reference,
+        destination: "BREATH WOOD — замовлення",
+        comment: paymentComment,
+        redirectUrl: buildPaymentRedirectUrl(),
+      });
+
+      setPaymentPageUrl(invoice.pageUrl);
+      setPaymentModalOpen(true);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : undefined;
+      setNpError(
+        message ??
+          "Не вдалося відкрити оплату Monobank. Перевірте токен або спробуйте пізніше.",
+      );
+    } finally {
+      setPaymentLoading(false);
+    }
   };
 
   const warehouseListBusy = loadingWarehouses || loadingRemoteSearch;
@@ -503,10 +577,13 @@ export function ContactForm() {
                 <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent">
                   <DoodleIcon type="star" className="h-8 w-8" />
                 </div>
-                <h3 className="font-display text-2xl font-bold">Повідомлення надіслано!</h3>
+                <h3 className="font-display text-2xl font-bold">
+                  {paymentSuccess ? "Оплату отримано!" : "Дякуємо!"}
+                </h3>
                 <p className="mt-2 text-muted">
-                  Заявку на доставку ({activeDelivery?.label ?? "Нова Пошта"}) отримано.
-                  Зв&apos;яжемось із вами найближчим часом.
+                  {paymentSuccess
+                    ? `Замовлення оплачено. Доставка (${activeDelivery?.label ?? "Нова Пошта"}) оформлена — звʼяжемось із вами найближчим часом.`
+                    : `Заявку на доставку (${activeDelivery?.label ?? "Нова Пошта"}) отримано. Звʼяжемось із вами найближчим часом.`}
                 </p>
               </motion.div>
             ) : (
@@ -514,6 +591,11 @@ export function ContactForm() {
                 {!hasApiKey ? (
                   <p className="mb-4 rounded-xl bg-amber-100/80 px-4 py-3 text-sm text-ink">
                     API-ключ Нової Пошти ще не підключений. Додайте його в налаштуваннях проєкту.
+                  </p>
+                ) : null}
+                {!hasMonobankToken ? (
+                  <p className="mb-4 rounded-xl bg-amber-100/80 px-4 py-3 text-sm text-ink">
+                    Токен Monobank для оплати ще не підключений (NEXT_PUBLIC_MONOBANK_TOKEN).
                   </p>
                 ) : null}
 
@@ -529,6 +611,8 @@ export function ContactForm() {
                       id="name"
                       type="text"
                       required
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
                       className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink max-sm:text-base"
                       placeholder="Ваше ім’я"
                     />
@@ -748,26 +832,42 @@ export function ContactForm() {
                       <textarea
                         id="comment"
                         rows={3}
+                        value={orderComment}
+                        onChange={(e) => setOrderComment(e.target.value)}
                         className="mt-2 w-full resize-none border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink"
                         placeholder="Наприклад: зручний час для дзвінка"
                       />
                     </div>
+
+                    <div className="mt-8">
+                      <p className="mb-3 text-sm text-muted">
+                        Сума до сплати:{" "}
+                        <span className="font-semibold text-ink">
+                          {orderAmountUah.toLocaleString("uk-UA")} ₴
+                        </span>
+                      </p>
+                      <MagneticButton
+                        type="submit"
+                        disabled={paymentLoading || !hasMonobankToken}
+                        className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink py-4 text-sm font-semibold uppercase tracking-wider text-surface disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:px-10"
+                      >
+                        {paymentLoading ? "Відкриваємо оплату…" : "Сплатити"}
+                        <DoodleIcon type="arrow" className="h-4 w-4" />
+                      </MagneticButton>
+                    </div>
                   </FormStep>
                 </div>
                 {npError ? <p className="mt-4 text-sm text-red-500">{npError}</p> : null}
-
-                <div className="mt-8">
-                  <MagneticButton
-                    type="submit"
-                    className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-ink py-4 text-sm font-semibold uppercase tracking-wider text-surface sm:w-auto sm:px-10"
-                  >
-                    Оформити доставку
-                    <DoodleIcon type="arrow" className="h-4 w-4" />
-                  </MagneticButton>
-                </div>
               </>
             )}
           </form>
+
+          <MonobankPaymentModal
+            open={paymentModalOpen}
+            pageUrl={paymentPageUrl}
+            amountUah={orderAmountUah}
+            onClose={() => setPaymentModalOpen(false)}
+          />
         </Reveal>
 
         <Reveal delay={0.25}>

@@ -9,6 +9,7 @@ type MagneticButtonProps = {
   onClick?: () => void;
   href?: string;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 };
 
 export function MagneticButton({
@@ -17,6 +18,7 @@ export function MagneticButton({
   onClick,
   href,
   type = "button",
+  disabled = false,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLElement>(null);
 
@@ -36,13 +38,16 @@ export function MagneticButton({
   };
 
   const sharedProps = {
-    onMouseMove: handleMouseMove,
-    onMouseLeave: handleMouseLeave,
-    whileHover: { scale: 1.05 },
-    whileTap: { scale: 0.95 },
+    onMouseMove: disabled ? undefined : handleMouseMove,
+    onMouseLeave: disabled ? undefined : handleMouseLeave,
+    whileHover: disabled ? undefined : { scale: 1.05 },
+    whileTap: disabled ? undefined : { scale: 0.95 },
     transition: { type: "spring" as const, stiffness: 400, damping: 17 },
-    className: `inline-flex cursor-pointer items-center justify-center transition-transform duration-300 ${className}`,
-    onClick,
+    className: `inline-flex items-center justify-center transition-transform duration-300 ${
+      disabled ? "cursor-not-allowed" : "cursor-pointer"
+    } ${className}`,
+    onClick: disabled ? undefined : onClick,
+    "aria-disabled": disabled,
   };
 
   if (href) {
@@ -57,6 +62,7 @@ export function MagneticButton({
     <motion.button
       ref={ref as React.RefObject<HTMLButtonElement>}
       type={type}
+      disabled={disabled}
       {...sharedProps}
     >
       {children}
