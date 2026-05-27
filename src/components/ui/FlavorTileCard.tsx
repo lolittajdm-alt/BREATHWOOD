@@ -25,21 +25,26 @@ export function FlavorTileCard({
     <IconTileCard
       ariaLabel={name}
       selected={selected}
-      className={`bg-gradient-to-br ${tint} ${darkTint}`}
+      className={`relative overflow-hidden p-0 ${tint} ${darkTint}`}
       footer={
-        <TileActionButton selected={selected} ariaPressed={selected} onClick={onToggle}>
-          {selected ? "Обрано" : "Обрати"}
-        </TileActionButton>
+        <div className="pointer-events-none absolute inset-x-0 bottom-3 z-10 flex justify-center sm:bottom-4">
+          <div className="pointer-events-auto">
+            <TileActionButton selected={selected} ariaPressed={selected} onClick={onToggle}>
+              {selected ? "Обрано" : "Обрати"}
+            </TileActionButton>
+          </div>
+        </div>
       }
     >
-      <div className="h-14 w-14 overflow-hidden rounded-xl bg-card/70 shadow-soft transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20">
+      <div className="absolute inset-0">
         <Image
           src={image}
           alt={name}
-          width={120}
-          height={120}
-          className="h-full w-full object-cover"
+          fill
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
     </IconTileCard>
   );
