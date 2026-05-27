@@ -62,7 +62,7 @@ export function About() {
                 <li key={feature.line1}>
                   <Reveal delay={0.2 + i * 0.08}>
                     <FeatureHeading variant="feature" line1={feature.line1} line2={feature.line2} />
-                    <p className="mt-1.5 text-sm leading-relaxed text-muted sm:mt-2 sm:space-y-2 sm:text-base">
+                    <p className="mt-1.5 text-sm leading-relaxed text-muted sm:mt-2 sm:text-base">
                       {feature.text}
                     </p>
                   </Reveal>
