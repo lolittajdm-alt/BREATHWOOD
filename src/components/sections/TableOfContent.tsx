@@ -12,9 +12,7 @@ export function TableOfContent() {
       id="toc"
       className="section-shell relative w-full overflow-x-clip py-16 md:py-32"
     >
-      <span className="section-number absolute bottom-4 right-1 sm:bottom-8 sm:right-4 md:right-12">
-        04
-      </span>
+      <span className="section-number">04</span>
 
       <p
         className="bg-watermark pointer-events-none absolute top-1/2 left-1/2 max-w-[100vw] -translate-x-1/2 -translate-y-1/2 select-none overflow-hidden font-display font-black uppercase leading-none"

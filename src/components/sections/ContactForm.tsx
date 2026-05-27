@@ -17,9 +17,7 @@ export function ContactForm() {
 
   return (
     <section id="contact" className="section-shell relative py-12 md:py-32">
-      <span className="section-number absolute top-6 right-2 sm:top-10 sm:right-4 md:right-12">
-        07
-      </span>
+      <span className="section-number">07</span>
 
       <div className="section-container">
         <Reveal>

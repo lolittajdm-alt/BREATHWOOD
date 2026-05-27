@@ -25,9 +25,7 @@ export function Hero() {
       id="hero"
       className="section-shell relative overflow-x-hidden pb-10 pt-6 sm:pb-14 sm:pt-8 md:pb-16"
     >
-      <span className="section-number absolute top-16 right-2 sm:top-20 sm:right-4 md:right-12">
-        01
-      </span>
+      <span className="section-number">01</span>
 
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-[min(80vw,600px)] w-[min(80vw,600px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/10" />
 

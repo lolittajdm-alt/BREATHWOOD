@@ -38,9 +38,7 @@ export function Testimonials() {
       id="testimonials"
       className="section-shell relative -mt-4 overflow-x-clip pb-12 pt-8 md:-mt-10 md:pb-16 md:pt-12"
     >
-      <span className="section-number absolute top-6 right-2 sm:top-12 sm:right-4 md:right-12">
-        02
-      </span>
+      <span className="section-number">02</span>
 
       <div className="section-container">
         <Reveal>

@@ -9,9 +9,7 @@ import { orderSteps } from "@/data/content";
 export function Services() {
   return (
     <section id="services" className="section-shell relative py-12 md:py-32">
-      <span className="section-number absolute bottom-4 left-1 sm:bottom-12 sm:left-4 md:left-12">
-        06
-      </span>
+      <span className="section-number">06</span>
 
       <div className="section-container">
         <div className="services-layout grid gap-16 lg:grid-cols-2 lg:items-start">

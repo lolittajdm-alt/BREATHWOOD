@@ -25,7 +25,7 @@ const mainFeatures = [
 export function About() {
   return (
     <section id="about" className="section-shell relative -mt-4 pb-12 pt-8 md:-mt-10 md:pb-16 md:pt-12">
-      <span className="section-number absolute top-4 left-1 sm:top-8 sm:left-4 md:left-12">03</span>
+      <span className="section-number">03</span>
 
       <div className="section-container">
         <Reveal>

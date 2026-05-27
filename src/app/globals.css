@@ -117,7 +117,7 @@
   }
 
   .section-number {
-    @apply pointer-events-none select-none font-display font-black leading-none;
+    @apply pointer-events-none absolute top-8 right-2 z-[1] select-none font-display font-black leading-none sm:top-12 sm:right-4 md:right-12;
     color: color-mix(in srgb, var(--color-ink) 4%, transparent);
     font-size: clamp(3.5rem, 22vw, 16rem);
   }
