@@ -155,9 +155,11 @@ export async function fetchWarehousesForCity(
   apiKey: string,
   cityRef: string,
   deliveryMethod: DeliveryMethod,
+  limit: number = 50,
 ): Promise<WarehouseApiItem[]> {
   const typeRef =
     deliveryMethod === "postomat" ? NP_WAREHOUSE_POSTOMAT_REF : NP_WAREHOUSE_BRANCH_REF;
+  const category = deliveryMethod === "postomat" ? "Postomat" : "Branch";
 
   const json = await callNovaPoshta<WarehouseApiItem[]>(
     apiKey,
@@ -166,12 +168,12 @@ export async function fetchWarehousesForCity(
     {
       CityRef: cityRef,
       TypeOfWarehouseRef: typeRef,
-      Limit: 500,
+      Limit: limit,
     },
   );
 
   if (json.success && json.data?.length) {
-    return json.data;
+    return (json.data ?? []).filter((item) => item.CategoryOfWarehouse === category);
   }
 
   const fallback = await callNovaPoshta<WarehouseApiItem[]>(
@@ -180,7 +182,7 @@ export async function fetchWarehousesForCity(
     "getWarehouses",
     {
       CityRef: cityRef,
-      Limit: 500,
+      Limit: limit,
     },
   );
 

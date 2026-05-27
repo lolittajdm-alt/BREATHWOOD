@@ -146,17 +146,59 @@ export function ContactForm() {
       return;
     }
 
+    let cancelled = false;
     const query = warehouseQuery.trim();
+
+    // Якщо номер не введён — показываем список сразу после выбора города.
     if (query.length < 1) {
+      setLoadingWarehouses(true);
+      setNpError("");
       setWarehouses([]);
       setShowWarehouseList(false);
       setSelectedWarehouseRef("");
       setSelectedWarehouseName("");
-      return;
+
+      void (async () => {
+        try {
+          const data = await fetchWarehousesForCity(
+            NOVA_POSHTA_API_KEY,
+            selectedCityRef,
+            deliveryMethod,
+            50,
+          );
+          if (cancelled) return;
+
+          const mapped: WarehouseOption[] = data
+            .slice(0, 50)
+            .map((item) => ({
+              ref: item.Ref,
+              name: formatWarehouseLabel(item),
+            }));
+
+          setWarehouses(mapped);
+          setShowWarehouseList(mapped.length > 0);
+        } catch (error) {
+          if (cancelled) return;
+          const message = error instanceof Error ? error.message : undefined;
+          setNpError(
+            message ??
+              `Не вдалося завантажити ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`,
+          );
+          setWarehouses([]);
+          setShowWarehouseList(false);
+        } finally {
+          if (!cancelled) setLoadingWarehouses(false);
+        }
+      })();
+
+      return () => {
+        cancelled = true;
+      };
     }
 
     const timer = window.setTimeout(async () => {
       try {
+        if (cancelled) return;
         setLoadingWarehouses(true);
         setNpError("");
 
@@ -166,6 +208,8 @@ export function ContactForm() {
           deliveryMethod,
           query,
         );
+
+        if (cancelled) return;
 
         const mapped: WarehouseOption[] = data.map((item) => ({
           ref: item.Ref,
@@ -180,6 +224,7 @@ export function ContactForm() {
           );
         }
       } catch (error) {
+        if (cancelled) return;
         const message = error instanceof Error ? error.message : undefined;
         setNpError(
           message ??
@@ -188,11 +233,14 @@ export function ContactForm() {
         setWarehouses([]);
         setShowWarehouseList(false);
       } finally {
-        setLoadingWarehouses(false);
+        if (!cancelled) setLoadingWarehouses(false);
       }
     }, 350);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
   }, [
     warehouseQuery,
     selectedCityRef,
@@ -459,8 +507,8 @@ export function ContactForm() {
                       <p className="mt-2 text-xs text-muted">Обрано: {selectedWarehouseName}</p>
                     ) : selectedCityRef ? (
                       <p className="mt-2 text-xs text-muted">
-                        Введіть номер {activeDelivery.pointLabel.toLowerCase()} — з&apos;явиться
-                        список для вибору.
+                        Оберіть зі списку {activeDelivery.pointLabel.toLowerCase()} або введіть
+                        номер, щоб уточнити.
                       </p>
                     ) : null}
                   </div>
