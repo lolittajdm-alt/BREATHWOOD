@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { DoodleIcon } from "@/components/ui/DoodleIcon";
@@ -116,11 +115,9 @@ export function Hero() {
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="relative overflow-hidden">
-                    <Image
+                    <img
                       src={item.image}
                       alt={item.title}
-                      width={800}
-                      height={item.tall ? 1000 : 600}
                       className={`w-full object-cover grayscale transition-all duration-500 group-hover:scale-110 group-hover:grayscale-0 ${item.tall ? "aspect-[3/4]" : "aspect-[4/3]"}`}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-transparent to-transparent opacity-80 transition-opacity duration-400 sm:opacity-0 sm:group-hover:opacity-100" />
