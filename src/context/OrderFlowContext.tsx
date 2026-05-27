@@ -16,19 +16,9 @@ type OrderFlowContextValue = {
 
 const OrderFlowContext = createContext<OrderFlowContextValue | null>(null);
 
-const ORDER_SECTION_IDS = new Set(["services", "toc", "flavors", "contact"]);
-
 export function OrderFlowProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [pendingScrollId, setPendingScrollId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const hash = window.location.hash.replace("#", "");
-    if (ORDER_SECTION_IDS.has(hash)) {
-      setIsOpen(true);
-      setPendingScrollId(hash);
-    }
-  }, []);
 
   const openOrderFlow = useCallback((scrollToId = "services") => {
     setIsOpen(true);
