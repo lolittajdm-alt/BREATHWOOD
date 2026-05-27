@@ -40,10 +40,11 @@ type WarehouseOption = {
 };
 
 function mapWarehouseItem(item: WarehouseApiItem): WarehouseOption {
+  const number = item.Number != null ? String(item.Number) : "";
   return {
     ref: item.Ref,
     name: formatWarehouseLabel(item),
-    number: item.Number ?? "",
+    number,
   };
 }
 
@@ -119,10 +120,11 @@ export function ContactForm() {
   );
 
   const applyWarehouseSelection = useCallback((warehouse: WarehouseOption) => {
-    setWarehouseInput(warehouse.number || warehouse.name);
+    setWarehouseInput(warehouse.name);
     setSelectedWarehouseRef(warehouse.ref);
     setSelectedWarehouseName(warehouse.name);
     setWarehouseOpen(false);
+    setRemoteWarehouses([]);
     setNpError("");
   }, []);
 
@@ -198,11 +200,29 @@ export function ContactForm() {
 
   const displayWarehouses = useMemo(() => {
     const q = warehouseInput.trim();
+
+    if (
+      warehouseOpen &&
+      selectedWarehouseRef &&
+      warehouseInput === selectedWarehouseName
+    ) {
+      return allWarehouses.slice(0, 50);
+    }
+
     if (q.length > 0 && localFilteredWarehouses.length === 0 && remoteWarehouses.length > 0) {
       return remoteWarehouses.slice(0, 50);
     }
+
     return localFilteredWarehouses;
-  }, [warehouseInput, localFilteredWarehouses, remoteWarehouses]);
+  }, [
+    warehouseInput,
+    warehouseOpen,
+    selectedWarehouseRef,
+    selectedWarehouseName,
+    allWarehouses,
+    localFilteredWarehouses,
+    remoteWarehouses,
+  ]);
 
   useEffect(() => {
     if (!warehouseOpen || !selectedCityRef || !hasApiKey) return;
@@ -355,10 +375,11 @@ export function ContactForm() {
   };
 
   const handleWarehouseInput = (value: string) => {
-    const digitsOnly = value.replace(/\D/g, "");
-    setWarehouseInput(digitsOnly);
-    setSelectedWarehouseRef("");
-    setSelectedWarehouseName("");
+    setWarehouseInput(value);
+    if (selectedWarehouseRef) {
+      setSelectedWarehouseRef("");
+      setSelectedWarehouseName("");
+    }
     setRemoteWarehouses([]);
     setWarehouseOpen(true);
   };
@@ -559,7 +580,6 @@ export function ContactForm() {
                     <input
                       id="warehouse"
                       type="text"
-                      inputMode="numeric"
                       autoComplete="off"
                       value={warehouseInput}
                       onChange={(e) => handleWarehouseInput(e.target.value)}
@@ -608,8 +628,10 @@ export function ContactForm() {
                             <button
                               type="button"
                               role="option"
-                              onMouseDown={(e) => e.preventDefault()}
-                              onClick={() => applyWarehouseSelection(warehouse)}
+                              onMouseDown={(e) => {
+                                e.preventDefault();
+                                applyWarehouseSelection(warehouse);
+                              }}
                               className={`w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent/40 ${
                                 selectedWarehouseRef === warehouse.ref
                                   ? "bg-accent/30 font-semibold"
@@ -622,9 +644,7 @@ export function ContactForm() {
                         ))}
                       </ul>
                     ) : null}
-                    {selectedWarehouseName ? (
-                      <p className="mt-2 text-xs text-muted">Обрано: {selectedWarehouseName}</p>
-                    ) : selectedCityRef ? (
+                    {selectedCityRef && !selectedWarehouseRef ? (
                       <p className="mt-2 text-xs text-muted">
                         Натисніть поле — з&apos;явиться список. Введіть номер, щоб звузити пошук.
                       </p>
