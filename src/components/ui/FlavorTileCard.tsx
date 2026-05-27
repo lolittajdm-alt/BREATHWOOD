@@ -1,11 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { IconTileCard } from "@/components/ui/IconTileCard";
 import { TileActionButton } from "@/components/ui/TileActionButton";
 
 type FlavorTileCardProps = {
   name: string;
-  emoji: string;
+  image: string;
   tint: string;
   darkTint: string;
   selected: boolean;
@@ -14,7 +15,7 @@ type FlavorTileCardProps = {
 
 export function FlavorTileCard({
   name,
-  emoji,
+  image,
   tint,
   darkTint,
   selected,
@@ -31,8 +32,14 @@ export function FlavorTileCard({
         </TileActionButton>
       }
     >
-      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-card/70 text-3xl shadow-soft transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20 sm:text-4xl">
-        {emoji}
+      <div className="h-14 w-14 overflow-hidden rounded-xl bg-card/70 shadow-soft transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20">
+        <Image
+          src={image}
+          alt={name}
+          width={120}
+          height={120}
+          className="h-full w-full object-cover"
+        />
       </div>
     </IconTileCard>
   );

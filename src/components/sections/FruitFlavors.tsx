@@ -27,7 +27,7 @@ export function FruitFlavors() {
   const renderFlavorCard = (flavor: (typeof fruitFlavors)[number]) => (
     <FlavorTileCard
       name={flavor.name}
-      emoji={flavor.emoji}
+      image={flavor.image}
       tint={flavor.tint}
       darkTint={flavor.darkTint}
       selected={selectedIds.has(flavor.id)}
