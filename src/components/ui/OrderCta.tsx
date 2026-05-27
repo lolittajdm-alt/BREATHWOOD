@@ -8,18 +8,31 @@ export function OrderCta() {
   const { openOrderFlow } = useOrderFlow();
 
   return (
-    <section className="section-shell relative pb-4 pt-2 md:pb-8">
-      <div className="section-container">
+    <section className="section-shell relative pb-8 pt-4 md:pb-12 md:pt-6">
+      <div className="section-container flex justify-center">
         <Reveal>
           <motion.button
             type="button"
             onClick={() => openOrderFlow("services")}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="section-heading-lg text-left transition-opacity hover:opacity-90"
+            className="hero-title text-center sm:leading-[0.85]"
           >
-            <span className="playful-tilt">ЗАМОВИТИ</span>
-            <span className="text-accent">.</span>
+            <span className="relative inline-block">
+              <span className="hero-title-mark playful-tilt">З</span>
+              <span className="hero-title-mark">А</span>
+              <span className="hero-title-mark playful-tilt-alt">М</span>
+              <span className="hero-title-mark">О</span>
+              <span className="hero-title-mark">В</span>
+              <span className="hero-title-mark playful-tilt">И</span>
+              <span className="hero-title-mark">Т</span>
+              <span className="hero-title-mark">И</span>
+              <span className="hero-title-dot">.</span>
+              <span
+                className="absolute -inset-x-2 bottom-2 top-1 -z-0 rounded-2xl bg-accent md:rounded-3xl"
+                aria-hidden="true"
+              />
+            </span>
           </motion.button>
         </Reveal>
       </div>
