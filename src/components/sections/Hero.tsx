@@ -11,7 +11,6 @@ export function Hero() {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const doodles = [
     { type: "camera" as const, top: "18%", left: "42%", delay: 0 },
     { type: "design" as const, top: "28%", left: "55%", delay: 0.2 },
@@ -24,7 +23,7 @@ export function Hero() {
     <section
       ref={ref}
       id="hero"
-      className="section-shell relative overflow-hidden pb-10 pt-6 sm:pb-14 sm:pt-8 md:pb-16"
+      className="section-shell relative overflow-x-hidden pb-10 pt-6 sm:pb-14 sm:pt-8 md:pb-16"
     >
       <span className="section-number absolute top-16 right-2 sm:top-20 sm:right-4 md:right-12">
         01
@@ -32,40 +31,46 @@ export function Hero() {
 
       <div className="pointer-events-none absolute top-1/2 left-1/2 h-[min(80vw,600px)] w-[min(80vw,600px)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink/10" />
 
-      <motion.div style={{ y, opacity }} className="section-container mt-4 sm:mt-8">
+      <div className="section-container relative z-10 mt-4 sm:mt-8">
         <div className="relative max-w-4xl">
-          <Reveal delay={0.15}>
-            <h1 className="hero-title sm:leading-[0.85]">
-              <span className="relative inline-block">
-                <span className="relative z-10">B</span>
-                <span className="playful-tilt relative z-10">R</span>
-                <span className="relative z-10">E</span>
-                <span className="playful-tilt-alt relative z-10">A</span>
-                <span className="relative z-10">T</span>
-                <span className="relative z-10">H</span>
-                <span
-                  className="absolute -inset-x-2 bottom-2 top-1 -z-0 rounded-2xl bg-accent md:rounded-3xl"
-                  aria-hidden="true"
-                />
-              </span>
-            </h1>
-          </Reveal>
+          <motion.h1
+            className="hero-title sm:leading-[0.85]"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className="relative inline-block">
+              <span className="relative z-10">B</span>
+              <span className="playful-tilt relative z-10">R</span>
+              <span className="relative z-10">E</span>
+              <span className="playful-tilt-alt relative z-10">A</span>
+              <span className="relative z-10">T</span>
+              <span className="relative z-10">H</span>
+              <span
+                className="absolute -inset-x-2 bottom-2 top-1 -z-0 rounded-2xl bg-accent md:rounded-3xl"
+                aria-hidden="true"
+              />
+            </span>
+          </motion.h1>
 
-          <Reveal delay={0.25}>
-            <h1 className="hero-title sm:leading-[0.85]">
-              <span className="relative inline-block">
-                <span className="relative z-10">W</span>
-                <span className="playful-tilt-alt relative z-10">O</span>
-                <span className="relative z-10">O</span>
-                <span className="playful-tilt relative z-10">D</span>
-                <span className="text-ink/20">.</span>
-                <span
-                  className="absolute -inset-x-2 bottom-2 top-1 -z-0 rounded-2xl bg-accent md:rounded-3xl"
-                  aria-hidden="true"
-                />
-              </span>
-            </h1>
-          </Reveal>
+          <motion.h1
+            className="hero-title sm:leading-[0.85]"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className="relative inline-block">
+              <span className="relative z-10">W</span>
+              <span className="playful-tilt-alt relative z-10">O</span>
+              <span className="relative z-10">O</span>
+              <span className="playful-tilt relative z-10">D</span>
+              <span className="text-ink/20">.</span>
+              <span
+                className="absolute -inset-x-2 bottom-2 top-1 -z-0 rounded-2xl bg-accent md:rounded-3xl"
+                aria-hidden="true"
+              />
+            </span>
+          </motion.h1>
 
           <Reveal delay={0.4}>
             <p className="mt-4 max-w-lg text-sm leading-relaxed text-muted sm:mt-6 md:text-base">
@@ -93,12 +98,13 @@ export function Hero() {
 
         <motion.p
           className="hero-side-text vertical-text absolute right-0 top-1/3 hidden text-xs font-medium uppercase tracking-[0.4em] text-muted lg:block"
+          style={{ y }}
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 4, repeat: Infinity }}
         >
           BREATH WOOD × 2026
         </motion.p>
-      </motion.div>
+      </div>
 
       <div className="section-container mt-8 sm:mt-16 md:mt-20">
         <div className="masonry-grid">

@@ -164,10 +164,6 @@
       font-size: clamp(1.5rem, 6vw, 1.875rem);
     }
 
-    .hero-title {
-      font-size: clamp(2.1rem, 10.5vw, 2.75rem);
-    }
-
     .feature-card {
       @apply min-h-[150px] rounded-xl p-3;
     }
