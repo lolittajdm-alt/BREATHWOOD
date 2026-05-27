@@ -77,7 +77,7 @@ export function Hero() {
         {doodles.map((d, i) => (
           <motion.div
             key={i}
-            className="absolute hidden text-ink/30 md:block"
+            className="hero-doodle absolute hidden text-ink/30 md:block"
             style={{ top: d.top, left: d.left }}
             animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
             transition={{
@@ -92,7 +92,7 @@ export function Hero() {
         ))}
 
         <motion.p
-          className="vertical-text absolute right-0 top-1/3 hidden text-xs font-medium uppercase tracking-[0.4em] text-muted lg:block"
+          className="hero-side-text vertical-text absolute right-0 top-1/3 hidden text-xs font-medium uppercase tracking-[0.4em] text-muted lg:block"
           animate={{ opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 4, repeat: Infinity }}
         >
@@ -105,7 +105,7 @@ export function Hero() {
           {portfolioItems.map((item, i) => (
             <Reveal key={item.id} delay={i * 0.08}>
               <motion.div
-                className="masonry-item group relative overflow-hidden rounded-2xl sm:rounded-[2rem]"
+                className="masonry-item group relative overflow-hidden rounded-[2rem]"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.4 }}
               >

@@ -15,7 +15,7 @@ export function Footer() {
   return (
     <footer className="section-shell relative border-t border-ink/10 py-10 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:py-16">
       <div className="section-container">
-        <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
+        <div className="footer-layout flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
           <div>
             <motion.h2
               className="font-display text-[clamp(1.375rem,6.5vw,4rem)] font-extrabold leading-none"
@@ -31,7 +31,7 @@ export function Footer() {
             </p>
           </div>
 
-          <nav className="grid grid-cols-2 gap-x-6 gap-y-3 sm:flex sm:flex-wrap sm:gap-6">
+          <nav className="footer-nav grid grid-cols-2 gap-x-6 gap-y-3 sm:flex sm:flex-wrap sm:gap-6">
             {links.map((link) => (
               <a
                 key={link.label}

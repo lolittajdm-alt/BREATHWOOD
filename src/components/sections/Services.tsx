@@ -14,7 +14,7 @@ export function Services() {
       </span>
 
       <div className="section-container">
-        <div className="grid gap-8 lg:grid-cols-2 lg:items-start lg:gap-16">
+        <div className="services-layout grid gap-16 lg:grid-cols-2 lg:items-start">
           <div>
             <Reveal>
               <h2 className="section-heading">

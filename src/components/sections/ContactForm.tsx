@@ -19,7 +19,7 @@ export function ContactForm() {
       <span className="section-number absolute top-4 left-1/2 -translate-x-1/2 sm:top-8">07</span>
 
       <div className="section-container">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
+        <div className="contact-layout grid gap-16 lg:grid-cols-2">
           <div>
             <Reveal>
               <h2 className="section-heading">
@@ -120,7 +120,7 @@ export function ContactForm() {
         </div>
 
         <Reveal delay={0.25}>
-          <div className="mt-12 grid gap-6 border-t border-ink/10 pt-12 sm:mt-20 sm:grid-cols-[1fr_auto] sm:pt-16">
+          <div className="contact-footer mt-20 grid gap-6 border-t border-ink/10 pt-16 sm:grid-cols-[1fr_auto]">
             <div className="glass rounded-3xl p-6 md:p-8">
               <h3 className="font-display text-2xl font-bold md:text-3xl">Контакти</h3>
               <ul className="mt-6 space-y-3 text-sm md:text-base">
