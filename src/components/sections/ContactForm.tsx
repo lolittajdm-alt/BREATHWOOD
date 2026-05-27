@@ -9,8 +9,9 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import {
   callNovaPoshta,
   deliveryMethodOptions,
-  fetchWarehousesForCity,
   formatNovaPoshtaError,
+  formatWarehouseLabel,
+  searchWarehouses,
   type DeliveryMethod,
 } from "@/lib/novaPoshta";
 
@@ -35,8 +36,12 @@ export function ContactForm() {
   const [showCityList, setShowCityList] = useState(false);
   const [selectedCityRef, setSelectedCityRef] = useState("");
   const [selectedCityName, setSelectedCityName] = useState("");
+  const [warehouseQuery, setWarehouseQuery] = useState("");
+  const [warehouseLocked, setWarehouseLocked] = useState(false);
   const [warehouses, setWarehouses] = useState<WarehouseOption[]>([]);
+  const [showWarehouseList, setShowWarehouseList] = useState(false);
   const [selectedWarehouseRef, setSelectedWarehouseRef] = useState("");
+  const [selectedWarehouseName, setSelectedWarehouseName] = useState("");
   const [loadingCities, setLoadingCities] = useState(false);
   const [loadingWarehouses, setLoadingWarehouses] = useState(false);
   const [npError, setNpError] = useState("");
@@ -44,13 +49,34 @@ export function ContactForm() {
   const hasApiKey = NOVA_POSHTA_API_KEY.length > 0;
   const activeDelivery = deliveryMethodOptions.find((item) => item.id === deliveryMethod)!;
 
-  const applyCitySelection = useCallback((city: CityOption) => {
-    setCityQuery(city.name);
-    setSelectedCityRef(city.ref);
-    setSelectedCityName(city.name);
+  const resetWarehouseSelection = useCallback(() => {
+    setWarehouseQuery("");
+    setWarehouseLocked(false);
+    setWarehouses([]);
+    setShowWarehouseList(false);
     setSelectedWarehouseRef("");
-    setCityLocked(true);
-    setShowCityList(false);
+    setSelectedWarehouseName("");
+  }, []);
+
+  const applyCitySelection = useCallback(
+    (city: CityOption) => {
+      setCityQuery(city.name);
+      setSelectedCityRef(city.ref);
+      setSelectedCityName(city.name);
+      resetWarehouseSelection();
+      setCityLocked(true);
+      setShowCityList(false);
+      setNpError("");
+    },
+    [resetWarehouseSelection],
+  );
+
+  const applyWarehouseSelection = useCallback((warehouse: WarehouseOption) => {
+    setWarehouseQuery(warehouse.name);
+    setSelectedWarehouseRef(warehouse.ref);
+    setSelectedWarehouseName(warehouse.name);
+    setWarehouseLocked(true);
+    setShowWarehouseList(false);
     setNpError("");
   }, []);
 
@@ -63,8 +89,7 @@ export function ContactForm() {
       setShowCityList(false);
       setSelectedCityRef("");
       setSelectedCityName("");
-      setWarehouses([]);
-      setSelectedWarehouseRef("");
+      resetWarehouseSelection();
       return;
     }
 
@@ -109,70 +134,92 @@ export function ContactForm() {
     }, 350);
 
     return () => window.clearTimeout(timer);
-  }, [cityQuery, hasApiKey, cityLocked, applyCitySelection]);
+  }, [cityQuery, hasApiKey, cityLocked, applyCitySelection, resetWarehouseSelection]);
 
   useEffect(() => {
+    if (warehouseLocked) return;
+
     if (!hasApiKey || !selectedCityRef) {
       setWarehouses([]);
-      setSelectedWarehouseRef("");
+      setShowWarehouseList(false);
       return;
     }
 
-    const controller = new AbortController();
+    const query = warehouseQuery.trim();
+    if (query.length < 1) {
+      setWarehouses([]);
+      setShowWarehouseList(false);
+      setSelectedWarehouseRef("");
+      setSelectedWarehouseName("");
+      return;
+    }
 
-    const loadWarehouses = async () => {
+    const timer = window.setTimeout(async () => {
       try {
         setLoadingWarehouses(true);
         setNpError("");
 
-        const data = await fetchWarehousesForCity(
+        const data = await searchWarehouses(
           NOVA_POSHTA_API_KEY,
           selectedCityRef,
           deliveryMethod,
+          query,
         );
-
-        if (controller.signal.aborted) return;
 
         const mapped: WarehouseOption[] = data.map((item) => ({
           ref: item.Ref,
-          name: item.Description,
+          name: formatWarehouseLabel(item),
         }));
         setWarehouses(mapped);
-        setSelectedWarehouseRef("");
+        setShowWarehouseList(mapped.length > 0);
 
-        if (mapped.length === 0) {
+        if (mapped.length === 1) {
+          applyWarehouseSelection(mapped[0]);
+        } else if (mapped.length === 0) {
           setNpError(
-            `У цьому місті немає ${activeDelivery.pointLabel.toLowerCase()} для обраного способу.`,
+            `${activeDelivery.pointLabel} не знайдено. Спробуйте інший номер або адресу.`,
           );
         }
       } catch (error) {
-        if (controller.signal.aborted) return;
         const message = error instanceof Error ? error.message : undefined;
         setNpError(
           message ??
-            `Не вдалося завантажити ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`,
+            `Не вдалося знайти ${activeDelivery.pointLabel.toLowerCase()} Нової Пошти.`,
         );
         setWarehouses([]);
+        setShowWarehouseList(false);
       } finally {
-        if (!controller.signal.aborted) {
-          setLoadingWarehouses(false);
-        }
+        setLoadingWarehouses(false);
       }
-    };
+    }, 350);
 
-    void loadWarehouses();
-
-    return () => controller.abort();
-  }, [selectedCityRef, deliveryMethod, hasApiKey, activeDelivery.pointLabel]);
+    return () => window.clearTimeout(timer);
+  }, [
+    warehouseQuery,
+    selectedCityRef,
+    deliveryMethod,
+    hasApiKey,
+    warehouseLocked,
+    applyWarehouseSelection,
+    activeDelivery.pointLabel,
+  ]);
 
   const handleCityInput = (value: string) => {
     setCityQuery(value);
     setCityLocked(false);
     setSelectedCityRef("");
     setSelectedCityName("");
-    setSelectedWarehouseRef("");
-    setWarehouses([]);
+    resetWarehouseSelection();
     setShowCityList(true);
+  };
+
+  const handleWarehouseInput = (value: string) => {
+    const digitsOnly = value.replace(/\D/g, "");
+    setWarehouseQuery(digitsOnly);
+    setWarehouseLocked(false);
+    setSelectedWarehouseRef("");
+    setSelectedWarehouseName("");
+    setShowWarehouseList(true);
   };
 
   const handleCitySelect = (city: CityOption) => {
@@ -181,7 +228,7 @@ export function ContactForm() {
 
   const handleDeliveryMethodChange = (method: DeliveryMethod) => {
     setDeliveryMethod(method);
-    setSelectedWarehouseRef("");
+    resetWarehouseSelection();
     setNpError("");
   };
 
@@ -357,34 +404,66 @@ export function ContactForm() {
                       </p>
                     )}
                   </div>
-                  <div>
+                  <div className="relative">
                     <label
                       htmlFor="warehouse"
                       className="text-xs font-semibold uppercase tracking-wider text-muted"
                     >
                       {activeDelivery.pointLabel}
                     </label>
-                    <select
+                    <input
                       id="warehouse"
-                      required
-                      value={selectedWarehouseRef}
-                      onChange={(e) => setSelectedWarehouseRef(e.target.value)}
-                      disabled={!hasApiKey || !selectedCityRef || loadingWarehouses}
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      value={warehouseQuery}
+                      onChange={(e) => handleWarehouseInput(e.target.value)}
+                      onFocus={() => warehouses.length > 0 && setShowWarehouseList(true)}
+                      disabled={!hasApiKey || !selectedCityRef}
                       className="mt-2 w-full border-b border-ink/15 bg-transparent py-3 text-base outline-none transition-colors focus:border-ink disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      <option value="">
-                        {loadingWarehouses
-                          ? `Завантажуємо ${activeDelivery.pointLabel.toLowerCase()}...`
-                          : selectedCityRef
-                            ? `Оберіть ${activeDelivery.pointLabel.toLowerCase()}`
-                            : "Спочатку оберіть місто"}
-                      </option>
-                      {warehouses.map((warehouse) => (
-                        <option key={warehouse.ref} value={warehouse.ref}>
-                          {warehouse.name}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder={
+                        selectedCityRef
+                          ? "Введіть номер (наприклад, 15)..."
+                          : "Спочатку оберіть місто"
+                      }
+                    />
+                    {loadingWarehouses ? (
+                      <p className="mt-2 text-xs text-muted">
+                        Шукаємо {activeDelivery.pointLabel.toLowerCase()}...
+                      </p>
+                    ) : null}
+                    {showWarehouseList && warehouses.length > 0 ? (
+                      <ul
+                        role="listbox"
+                        className="absolute left-0 right-0 top-full z-20 mt-1 max-h-52 overflow-y-auto rounded-2xl border border-ink/10 bg-card py-1 shadow-card"
+                      >
+                        {warehouses.map((warehouse) => (
+                          <li key={warehouse.ref}>
+                            <button
+                              type="button"
+                              role="option"
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => applyWarehouseSelection(warehouse)}
+                              className={`w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-accent/40 ${
+                                selectedWarehouseRef === warehouse.ref
+                                  ? "bg-accent/30 font-semibold"
+                                  : ""
+                              }`}
+                            >
+                              {warehouse.name}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                    {selectedWarehouseName ? (
+                      <p className="mt-2 text-xs text-muted">Обрано: {selectedWarehouseName}</p>
+                    ) : selectedCityRef ? (
+                      <p className="mt-2 text-xs text-muted">
+                        Введіть номер {activeDelivery.pointLabel.toLowerCase()} — з&apos;явиться
+                        список для вибору.
+                      </p>
+                    ) : null}
                   </div>
                   <div>
                     <label
